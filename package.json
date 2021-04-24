@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "A command line tool for contribution reporting on git projects.",
   "main": "build/index.js",
+  "bin": {
+    "git-reporter": "node ./bin/gitReport.js"
+  },
   "files": [
     "build",
-    "!build/**/*.test.*"
+    "!build/**/*.test.*",
+    "!build/setupTests.js"
   ],
   "scripts": {
     "prepare": "npm run build",
@@ -21,15 +25,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ulisesantana/ts-boilerplate.git"
+    "url": "git+https://github.com/ulisesantana/git-reporter.git"
   },
   "keywords": [],
   "author": "Ulises Santana <ulisesantana@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ulisesantana/ts-boilerplate/issues"
+    "url": "https://github.com/ulisesantana/git-reporter/issues"
   },
-  "homepage": "https://github.com/ulisesantana/ts-boilerplate#readme",
+  "homepage": "https://github.com/ulisesantana/git-reporter#readme",
   "devDependencies": {
     "@types/faker": "5.5.3",
     "@types/jest": "26.0.5",
