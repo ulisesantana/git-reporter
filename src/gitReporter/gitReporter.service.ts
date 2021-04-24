@@ -1,6 +1,7 @@
 import { EOL } from 'os'
 import { inject, injectable } from 'tsyringe'
 import { GitReporterRepository } from './gitReporter.repository'
+import faker from 'faker'
 
 export interface CommitterInfo {
   name: string
@@ -21,7 +22,7 @@ export class GitReporterService {
     @inject(GitReporterRepository) private readonly repository: GitReporterRepository
   ) {}
 
-  async exec (projectsPaths: string[], weeks: number = 4): Promise<GitReport> {
+  async generateReport (projectsPaths: string[], weeks: number = 4): Promise<GitReport> {
     for await (const gitLog of this.readGitLogs(projectsPaths, weeks)) {
       this.addGitLog(gitLog)
     }
@@ -29,6 +30,18 @@ export class GitReporterService {
     return {
       totalCommits: contributors.length,
       committers: GitReporterService.sortCommittersByTotalCommitsDesc(this.extractCommitters(contributors))
+    }
+  }
+
+  async generateAnonymousReport (projectsPaths: string[], weeks: number = 4): Promise<GitReport> {
+    const report = await this.generateReport(projectsPaths, weeks)
+    return {
+      totalCommits: report.totalCommits,
+      committers: report.committers.map(({ totalCommits }) => ({
+        email: faker.internet.email(),
+        name: faker.name.findName(),
+        totalCommits
+      }))
     }
   }
 

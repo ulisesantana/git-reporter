@@ -74,6 +74,26 @@ export const expectedReportForMultipleRepositories = {
   }))
 }
 
+export const expectedReportOutput = `
+Report for: 
+    irrelevant
+
+Total commits in the last 4 weeks: 17
+Contributions by author:
+    Richard Lau (rlau@redhat.com): 3
+    eladkeyshawn (elad.keyshawn@gmail.com): 2
+    Antoine du Hamel (duhamelantoine1995@gmail.com): 2
+    Michaël Zasso (targos@protonmail.com): 2
+    divlo (contact@divlo.fr): 1
+    Jayden Seric (me@jaydenseric.com): 1
+    Daniel Bevenius (daniel.bevenius@gmail.com): 1
+    Rich Trott (rtrott@gmail.com): 1
+    Anna Henningsen (anna@addaleax.net): 1
+    Andres (and.atencio@gmail.com): 1
+    Nitzan Uziely (linkgoron@gmail.com): 1
+    Voltrex (62040526+VoltrexMaster@users.noreply.github.com): 1
+`
+
 export const rawGitLog = `
 commit f9e07e432b352e3eb6c299df06eaeaa880980ce8
 Author: Richard Lau <rlau@redhat.com>
