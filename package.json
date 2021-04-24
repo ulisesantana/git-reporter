@@ -17,7 +17,7 @@
     "start": "node build/index.js",
     "dev": "npm run build -- --watch & nodemon build/index.js",
     "build": "npm run lint && npm test && tsc",
-    "docs:update": "auto-changelog -p && git commit -m \"📝 update changelog\" && git add CHANGELOG.md",
+    "docs:update": "auto-changelog -p && git add CHANGELOG.md && git commit -m \"📝 update changelog\"",
     "prepublishOnly": "npm run tag",
     "tag": "TAG=v$(node -pe \"require('./package.json').version\"); git commit -am \"🔖 $TAG\" && git tag $TAG && npm run docs:update && git push && git push --tags",
     "lint": "eslint . --ext .ts",
