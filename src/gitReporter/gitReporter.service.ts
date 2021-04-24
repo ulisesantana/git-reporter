@@ -73,8 +73,8 @@ export class GitReporterService {
   private async * readGitLogs (projectsPaths: string[], weeks: number) {
     let amountOfGitLogRead = 1
     for (const projectPath of projectsPaths) {
-      this.log.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Reading git log for ${projectPath}`)
       const gitLog = await this.repository.readGitLog(projectPath, weeks)
+      this.log.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
       amountOfGitLogRead += 1
       yield gitLog
     }
