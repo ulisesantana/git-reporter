@@ -1,5 +1,7 @@
 
 export const expectedReport = {
+  weeks: 4,
+  projects: ['irrelevant'],
   totalCommits: 17,
   committers: [
     {
@@ -66,6 +68,8 @@ export const expectedReport = {
 }
 
 export const expectedReportForMultipleRepositories = {
+  ...expectedReport,
+  projects: ['irrelevant', 'irrelevant'],
   totalCommits: expectedReport.totalCommits * 2,
   committers: expectedReport.committers.map(committer => ({
     email: committer.email,

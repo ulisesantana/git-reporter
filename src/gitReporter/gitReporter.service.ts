@@ -2,6 +2,7 @@ import { EOL } from 'os'
 import { inject, injectable } from 'tsyringe'
 import { GitReporterRepository } from './gitReporter.repository'
 import faker from 'faker'
+import path from 'path'
 
 export interface CommitterInfo {
   name: string
@@ -10,6 +11,8 @@ export interface CommitterInfo {
 }
 
 export interface GitReport {
+  weeks: number
+  projects: string[]
   totalCommits: number
   committers: CommitterInfo[]
 }
@@ -18,24 +21,41 @@ export interface GitReport {
 export class GitReporterService {
   private gitLog: string[] = []
 
+  // TODO Add logger and every time read a gitlog
   constructor (
     @inject(GitReporterRepository) private readonly repository: GitReporterRepository
   ) {}
 
-  async generateReport (projectsPaths: string[], weeks: number = 4): Promise<GitReport> {
+  async generateReportForAllProjectsInADirectory (directoryPath: string, weeks: number): Promise<GitReport> {
+    const projectPaths = await this.repository.readGitProjects(directoryPath)
+    return this.generateReport(projectPaths, weeks)
+  }
+
+  async generateAnonymousReportForAllProjectsInADirectory (directoryPath: string, weeks: number): Promise<GitReport> {
+    const projectPaths = await this.repository.readGitProjects(directoryPath)
+    return this.generateAnonymousReport(projectPaths, weeks)
+  }
+
+  async generateReport (projectsPaths: string[], weeks: number): Promise<GitReport> {
     for await (const gitLog of this.readGitLogs(projectsPaths, weeks)) {
       this.addGitLog(gitLog)
     }
     const contributors = this.gitLog.join(EOL).split(EOL).filter(line => line.includes('Author: '))
     return {
+      weeks,
+      projects: projectsPaths.map(GitReporterService.extractProjectName),
       totalCommits: contributors.length,
       committers: GitReporterService.sortCommittersByTotalCommitsDesc(this.extractCommitters(contributors))
     }
   }
 
-  async generateAnonymousReport (projectsPaths: string[], weeks: number = 4): Promise<GitReport> {
+  async generateAnonymousReport (projectsPaths: string[], weeks: number): Promise<GitReport> {
     const report = await this.generateReport(projectsPaths, weeks)
     return {
+      weeks,
+      projects: projectsPaths.map(
+        projectPath => `    ${GitReporterService.extractProjectName(projectPath)}`
+      ),
       totalCommits: report.totalCommits,
       committers: report.committers.map(({ totalCommits }) => ({
         email: faker.internet.email(),
@@ -73,6 +93,11 @@ export class GitReporterService {
       name: name.replace('Author: ', '').trim(),
       email: email.replace('>', '').trim()
     }
+  }
+
+  private static extractProjectName (projectPath: string): string {
+    const absolutePath = path.resolve(projectPath)
+    return absolutePath.slice(absolutePath.lastIndexOf('/') + 1)
   }
 
   private static sortCommittersByTotalCommitsDesc (committers: CommitterInfo[]): CommitterInfo[] {

@@ -3,9 +3,9 @@ import { GitReport, GitReporterService } from './gitReporter.service'
 import { EOL } from 'os'
 import { Notifier } from '../notifier'
 import { Logger } from '../logger'
-import path from 'path'
 
 interface GitReporterOptions {
+  allInDirectory: string
   anonymize: boolean
   projects: string[]
   slackUrl: string
@@ -21,15 +21,23 @@ export class GitReporterController {
   ) {}
 
   async exec ({
+    allInDirectory,
     anonymize,
     projects,
     weeks,
     slackUrl
   }: GitReporterOptions) {
-    const report = anonymize
-      ? await this.service.generateAnonymousReport(projects, weeks)
-      : await this.service.generateReport(projects, weeks)
-    const reportOutput = GitReporterController.generateReportOutput(weeks, projects, report)
+    let report: GitReport
+    if (allInDirectory) {
+      report = anonymize
+        ? await this.service.generateAnonymousReportForAllProjectsInADirectory(allInDirectory, weeks)
+        : await this.service.generateReportForAllProjectsInADirectory(allInDirectory, weeks)
+    } else {
+      report = anonymize
+        ? await this.service.generateAnonymousReport(projects, weeks)
+        : await this.service.generateReport(projects, weeks)
+    }
+    const reportOutput = GitReporterController.generateReportOutput(report)
     this.log.info(reportOutput)
     if (slackUrl) {
       await this.notifier.publishOnSlack(slackUrl, reportOutput)
@@ -37,15 +45,12 @@ export class GitReporterController {
     }
   }
 
-  private static generateReportOutput (weeks: number, projectsPaths: string[], report: GitReport): string {
+  private static generateReportOutput (report: GitReport): string {
     return `
 Report for: 
-${projectsPaths.map(
-    projectPath => `    ${GitReporterController.extractProjectName(projectPath)}`
-  ).join(EOL)
-}
+${report.projects.map(project => `    ${project}`).join(EOL)}
 
-Total commits in the last ${weeks} weeks: ${report.totalCommits}
+Total commits in the last ${report.weeks} weeks: ${report.totalCommits}
 Contributions by author:
 ${report.committers.map(({
       name,
@@ -53,10 +58,5 @@ ${report.committers.map(({
       totalCommits
     }) => `    ${name} (${email}): ${totalCommits}`).join(EOL)}
 `
-  }
-
-  private static extractProjectName (projectPath: string): string {
-    const absolutePath = path.resolve(projectPath)
-    return absolutePath.slice(absolutePath.lastIndexOf('/') + 1)
   }
 }

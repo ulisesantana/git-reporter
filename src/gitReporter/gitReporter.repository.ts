@@ -12,4 +12,12 @@ export class GitReporterRepository {
       `git -C ${absolutePath} fetch && git -C ${absolutePath} pull && git -C ${absolutePath} log --after="${weeks} weeks ago" --all`
     )
   }
+
+  async readGitProjects (directoryPath: string): Promise<string[]> {
+    const absolutePath = path.resolve(directoryPath)
+    const list = await this.command.run(`ls -dl ${absolutePath}/*/.git`)
+    return list.split('\n').map(line =>
+      line.split(' ').slice(-1)[0].replace('/.git', '')
+    ).filter(Boolean)
+  }
 }

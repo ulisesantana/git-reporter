@@ -13,47 +13,113 @@ describe('Git Reporter Service should', () => {
     container.clearInstances()
     gitReporterRepository = container.resolve(GitReporterRepository)
     gitReporterRepository.readGitLog = jest.fn(async () => rawGitLog)
+    gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
-  it('retrieve total commits', async () => {
-    const report = await new GitReporterService(gitReporterRepository)
-      .generateReport(['irrelevantPath'])
+  describe('generate a git report based on project paths', () => {
+    it('retrieve total commits', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReport(['path/irrelevant'], 4)
 
-    expect(report.totalCommits).toBe(expectedReport.totalCommits)
+      expect(report.totalCommits).toBe(expectedReport.totalCommits)
+    })
+
+    it('retrieve total commits for each committer', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReport(['path/irrelevant'], 4)
+
+      expect(report.committers).toStrictEqual(expectedReport.committers)
+    })
+
+    it('retrieve the amount of weeks used for generating the report', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReport(['path/irrelevant'], 4)
+
+      expect(report.weeks).toBe(expectedReport.weeks)
+    })
+
+    it('retrieve the projects used for generating the report', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReport(['path/irrelevant'], 4)
+
+      expect(report.projects).toStrictEqual(expectedReport.projects)
+    })
+
+    it('anonymize committers personal data', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateAnonymousReport(['path/irrelevant'], 4)
+
+      expect(report.totalCommits).toBe(expectedReport.totalCommits)
+      for (const [index, anonymizedCommitter] of report.committers.entries()) {
+        expect(anonymizedCommitter.totalCommits).toBe(expectedReport.committers[index].totalCommits)
+        expect(anonymizedCommitter.email).not.toBe(expectedReport.committers[index].email)
+        expect(anonymizedCommitter.name).not.toBe(expectedReport.committers[index].name)
+      }
+    })
+
+    it('process multiple repositories', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReport(['path/irrelevant', 'path/irrelevant'], 4)
+
+      expect(report).toStrictEqual(expectedReportForMultipleRepositories)
+    })
+
+    it('not fail if no projects are given', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReport([], 4)
+
+      expect(report.totalCommits).toBe(0)
+      expect(report.committers).toStrictEqual([])
+    })
   })
 
-  it('retrieve total commits for each committer', async () => {
-    const report = await new GitReporterService(gitReporterRepository)
-      .generateReport(['irrelevantPath'])
+  describe('generate a git report reading all git projects in a directory', () => {
+    it('retrieve total commits', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReportForAllProjectsInADirectory('path/irrelevant', 4)
 
-    expect(report.committers).toStrictEqual(expectedReport.committers)
-  })
+      expect(report.totalCommits).toBe(expectedReport.totalCommits)
+    })
 
-  it('retrieve anonymized report', async () => {
-    const report = await new GitReporterService(gitReporterRepository)
-      .generateAnonymousReport(['irrelevantPath'])
+    it('retrieve total commits for each committer', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReportForAllProjectsInADirectory('path/irrelevant', 4)
 
-    expect(report.totalCommits).toBe(expectedReport.totalCommits)
-    for (const [index, anonymizedCommitter] of report.committers.entries()) {
-      expect(anonymizedCommitter.totalCommits).toBe(expectedReport.committers[index].totalCommits)
-      expect(anonymizedCommitter.email).not.toBe(expectedReport.committers[index].email)
-      expect(anonymizedCommitter.name).not.toBe(expectedReport.committers[index].name)
-    }
-  })
+      expect(report.committers).toStrictEqual(expectedReport.committers)
+    })
 
-  it('process multiple repositories', async () => {
-    const report = await new GitReporterService(gitReporterRepository)
-      .generateReport(['irrelevantPath', 'irrelevantPath'])
+    it('retrieve the amount of weeks used for generating the report', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReportForAllProjectsInADirectory('path/irrelevant', 4)
 
-    expect(report.totalCommits).toBe(expectedReportForMultipleRepositories.totalCommits)
-    expect(report.committers).toStrictEqual(expectedReportForMultipleRepositories.committers)
-  })
+      expect(report.weeks).toBe(expectedReport.weeks)
+    })
 
-  it('not fail if no projects are given', async () => {
-    const report = await new GitReporterService(gitReporterRepository)
-      .generateReport([])
+    it('retrieve the projects used for generating the report', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReportForAllProjectsInADirectory('path/irrelevant', 4)
 
-    expect(report.totalCommits).toBe(0)
-    expect(report.committers).toStrictEqual([])
+      expect(report.projects).toStrictEqual(expectedReport.projects)
+    })
+
+    it('retrieve anonymized report', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateAnonymousReportForAllProjectsInADirectory('path/irrelevant', 4)
+
+      expect(report.totalCommits).toBe(expectedReport.totalCommits)
+      for (const [index, anonymizedCommitter] of report.committers.entries()) {
+        expect(anonymizedCommitter.totalCommits).toBe(expectedReport.committers[index].totalCommits)
+        expect(anonymizedCommitter.email).not.toBe(expectedReport.committers[index].email)
+        expect(anonymizedCommitter.name).not.toBe(expectedReport.committers[index].name)
+      }
+    })
+
+    it('not fail if no projects are given', async () => {
+      const report = await new GitReporterService(gitReporterRepository)
+        .generateReport([], 4)
+
+      expect(report.totalCommits).toBe(0)
+      expect(report.committers).toStrictEqual([])
+    })
   })
 })

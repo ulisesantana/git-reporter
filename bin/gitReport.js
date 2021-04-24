@@ -3,9 +3,20 @@ const { getopt } = require('stdio')
 const { gitReporter } = require('../build')
 
 const options = getopt({
-  anonymize: {
+  allInDirectory: {
     key: 'a',
+    args: 1,
+    description: 'Search for all git projects in a directory',
+    default: ''
+  },
+  anonymize: {
     description: 'Anonymize author names and emails.'
+  },
+  projects: {
+    key: 'p',
+    args: '*',
+    description: 'List of project paths to check.',
+    default: []
   },
   slackUrl: {
     key: 's',
@@ -23,8 +34,9 @@ const options = getopt({
 
 gitReporter
   .exec({
+    allInDirectory: options.allInDirectory,
     anonymize: Boolean(options.anonymize),
-    projects: options.args,
+    projects: options.projects,
     slackUrl: options.slackUrl,
     weeks: options.weeks
   })
