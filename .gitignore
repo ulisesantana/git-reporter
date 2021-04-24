@@ -3,3 +3,4 @@ build
 .vscode
 .idea
 coverage
+package-lock.json
