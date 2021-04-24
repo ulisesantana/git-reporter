@@ -4,7 +4,7 @@
   "description": "A command line tool for contribution reporting on git projects.",
   "main": "build/index.js",
   "bin": {
-    "git-reporter": "node ./bin/gitReport.js"
+    "git-reporter": "bin/gitReport.js"
   },
   "files": [
     "build",
