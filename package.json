@@ -30,7 +30,9 @@
     "type": "git",
     "url": "git+https://github.com/ulisesantana/git-reporter.git"
   },
-  "keywords": [],
+  "keywords": [
+    "git", "git log", "git report", "project report", "team report", "analytics"
+  ],
   "author": "Ulises Santana <ulisesantana@gmail.com>",
   "license": "MIT",
   "bugs": {
