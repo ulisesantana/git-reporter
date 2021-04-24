@@ -1,7 +1,7 @@
 {
-  "name": "ts-boilerplate",
+  "name": "git-reporter",
   "version": "1.0.0",
-  "description": "TypeScript boilerplate",
+  "description": "A command line tool for contribution reporting on git projects.",
   "main": "build/index.js",
   "files": [
     "build",
@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/ulisesantana/ts-boilerplate#readme",
   "devDependencies": {
+    "@types/faker": "^5.5.3",
     "@types/jest": "^26.0.5",
     "@types/node": "^14.14.10",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
@@ -49,7 +50,10 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "faker": "^5.5.3",
     "reflect-metadata": "^0.1.13",
-    "tsyringe": "^4.5.0"
+    "stdio": "^2.1.1",
+    "tsyringe": "^4.5.0",
+    "undici": "^3.3.5"
   }
 }

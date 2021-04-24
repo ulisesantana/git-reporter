@@ -21,8 +21,8 @@ export class GitReporterService {
     @inject(GitReporterRepository) private readonly repository: GitReporterRepository
   ) {}
 
-  async exec (projectPaths: string[], period: string = '4 weeks ago'): Promise<GitReport> {
-    for await (const gitLog of this.readGitLogs(projectPaths, period)) {
+  async exec (projectsPaths: string[], weeks: number = 4): Promise<GitReport> {
+    for await (const gitLog of this.readGitLogs(projectsPaths, weeks)) {
       this.addGitLog(gitLog)
     }
     const contributors = this.gitLog.join(EOL).split(EOL).filter(line => line.includes('Author: '))
@@ -36,9 +36,9 @@ export class GitReporterService {
     this.gitLog.push(gitLog)
   }
 
-  private async * readGitLogs (projectPaths: string[], period: string) {
-    for (const projectPath of projectPaths) {
-      const gitLog = await this.repository.readGitLog(projectPath, period)
+  private async * readGitLogs (projectsPaths: string[], weeks: number) {
+    for (const projectPath of projectsPaths) {
+      const gitLog = await this.repository.readGitLog(projectPath, weeks)
       yield gitLog
     }
   }

@@ -37,7 +37,7 @@ describe('Git Reporter should', () => {
     expect(report.committers).toStrictEqual(expectedReportForMultipleRepositories.committers)
   })
 
-  it('not fail no repository is added', async () => {
+  it('not fail if no projects are given', async () => {
     const report = await new GitReporterService(gitReporterRepository)
       .exec([])
 

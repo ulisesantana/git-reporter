@@ -6,10 +6,10 @@ import path from 'path'
 export class GitReporterRepository {
   constructor (@inject(Command) private readonly command: Command) {}
 
-  readGitLog (projectPath: string, period: string): Promise<string> {
+  readGitLog (projectPath: string, weeks: number): Promise<string> {
     const absolutePath = path.resolve(projectPath)
     return this.command.run(
-      `git -C ${absolutePath} fetch && git -C ${absolutePath} pull && git -C ${absolutePath} log --after="${period}" --all`
+      `git -C ${absolutePath} fetch && git -C ${absolutePath} pull && git -C ${absolutePath} log --after="${weeks} weeks ago" --all`
     )
   }
 }
