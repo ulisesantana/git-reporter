@@ -3,6 +3,7 @@ import { GitReport, GitReporterService } from './gitReporter.service'
 import { EOL } from 'os'
 import { Notifier } from '../notifier'
 import { Logger } from '../logger'
+import path from 'path'
 
 interface GitReporterOptions {
   anonymize: boolean
@@ -39,7 +40,10 @@ export class GitReporterController {
   private static generateReportOutput (weeks: number, projectsPaths: string[], report: GitReport): string {
     return `
 Report for: 
-${projectsPaths.map(path => `    ${path.slice(path.lastIndexOf('/') + 1)}`).join(EOL)}
+${projectsPaths.map(
+    projectPath => `    ${GitReporterController.extractProjectName(projectPath)}`
+  ).join(EOL)
+}
 
 Total commits in the last ${weeks} weeks: ${report.totalCommits}
 Contributions by author:
@@ -49,5 +53,10 @@ ${report.committers.map(({
       totalCommits
     }) => `    ${name} (${email}): ${totalCommits}`).join(EOL)}
 `
+  }
+
+  private static extractProjectName (projectPath: string): string {
+    const absolutePath = path.resolve(projectPath)
+    return absolutePath.slice(absolutePath.lastIndexOf('/') + 1)
   }
 }
