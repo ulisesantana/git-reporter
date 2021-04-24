@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe'
 import { GitReporterRepository } from './gitReporter.repository'
 import faker from 'faker'
 import path from 'path'
+import { Logger } from '../logger'
 
 export interface CommitterInfo {
   name: string
@@ -21,9 +22,9 @@ export interface GitReport {
 export class GitReporterService {
   private gitLog: string[] = []
 
-  // TODO Add logger and every time read a gitlog
   constructor (
-    @inject(GitReporterRepository) private readonly repository: GitReporterRepository
+    @inject(GitReporterRepository) private readonly repository: GitReporterRepository,
+    @inject(Logger) private readonly log: Logger
   ) {}
 
   async generateReportForAllProjectsInADirectory (directoryPath: string, weeks: number): Promise<GitReport> {
@@ -70,8 +71,11 @@ export class GitReporterService {
   }
 
   private async * readGitLogs (projectsPaths: string[], weeks: number) {
+    let amountOfGitLogRead = 1
     for (const projectPath of projectsPaths) {
+      this.log.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Reading git log for ${projectPath}`)
       const gitLog = await this.repository.readGitLog(projectPath, weeks)
+      amountOfGitLogRead += 1
       yield gitLog
     }
   }
