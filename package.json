@@ -9,7 +9,7 @@
     "build",
     "!build/**/*.test.*",
     "!build/setupTests.*",
-    "!build/**/*.map.js"
+    "!build/**/*.js.map"
   ],
   "scripts": {
     "prepare": "npm run build",
