@@ -12,12 +12,6 @@ const options = getopt({
   anonymize: {
     description: 'Anonymize author names and emails.'
   },
-  projects: {
-    key: 'p',
-    args: '*',
-    description: 'List of project paths to check.',
-    default: []
-  },
   slackUrl: {
     key: 's',
     args: 1,
@@ -31,12 +25,12 @@ const options = getopt({
     default: 4
   }
 })
-
+console.log(options)
 gitReporter
   .exec({
     allInDirectory: options.allInDirectory,
     anonymize: Boolean(options.anonymize),
-    projects: options.projects,
+    projects: Array.isArray(options.args) ? options.args : [],
     slackUrl: options.slackUrl,
     weeks: options.weeks
   })

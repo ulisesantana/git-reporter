@@ -3,7 +3,7 @@
 A command line tool for contribution reporting on git projects.
 
 ```shell
-git-reporter -p ./smarthome
+git-reporter ./smarthome
 
 Report for: 
     smarthome
@@ -16,18 +16,19 @@ Contributions by author:
 ## Usage
 
 You can see the commits uploaded on different branches and projects for a 
-period of time. Run the command with `-p` option followed by the relative 
+period of time. Run the command with followed by the relative 
 path to the different projects you want to check separated by spaces. For 
 example:
 
 ```shell
-git-reporter -p ./node ./lodash
+git-reporter ./node ./lodash
 ```
 
 Other way to use the package is using `-a` option followed by the directory 
 where you have all git projects you want to analyze. In this way the script 
 will check all git projects inside the directory (only first level, it 
-doesn't work recursively).
+doesn't work recursively). Furthermore, this option ignore the paths passed 
+as arguments.
 
 ```shell
 git-reporter -a projects
@@ -39,7 +40,6 @@ USAGE: git-reporter [OPTION1] [OPTION2]... arg1 arg2...
 The following options are supported:
   -a, --allInDirectory <ARG1>   	Search for all git projects in a directory
   --anonymize                   	Anonymize author names and emails.
-  -p, --projects <ARG1>...<ARGN>	List of project paths to check. ("" by default)
   -s, --slackUrl <ARG1>         	Slack url for publishing report.
   -w, --weeks <ARG1>            	Number of weeks in the past to look for commits. ("4" by default)
 ```
