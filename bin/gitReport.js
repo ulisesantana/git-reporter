@@ -25,7 +25,7 @@ const options = getopt({
     default: 4
   }
 })
-console.log(options)
+
 gitReporter
   .exec({
     allInDirectory: options.allInDirectory,
