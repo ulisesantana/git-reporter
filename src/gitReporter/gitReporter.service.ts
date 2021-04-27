@@ -8,6 +8,9 @@ import { Logger } from '../logger'
 export interface CommitterInfo {
   name: string
   email: string
+  totalFilesChanged: number
+  totalInsertions: number
+  totalDeletions: number
   totalCommits: number
 }
 
@@ -41,7 +44,7 @@ export class GitReporterService {
     for await (const gitLog of this.readGitLogs(projectsPaths, weeks)) {
       this.addGitLog(gitLog)
     }
-    const contributors = this.gitLog.join(EOL).split(EOL).filter(line => line.includes('Author: '))
+    const contributors = this.gitLog.join(EOL).split(EOL.concat(EOL)).filter(Boolean)
     return {
       weeks,
       projects: projectsPaths.map(GitReporterService.extractProjectName),
@@ -58,10 +61,10 @@ export class GitReporterService {
         projectPath => `    ${GitReporterService.extractProjectName(projectPath)}`
       ),
       totalCommits: report.totalCommits,
-      committers: report.committers.map(({ totalCommits }) => ({
+      committers: report.committers.map(committer => ({
+        ...committer,
         email: faker.internet.email(),
-        name: faker.name.findName(),
-        totalCommits
+        name: faker.name.findName()
       }))
     }
   }
@@ -80,23 +83,57 @@ export class GitReporterService {
     }
   }
 
-  private extractCommitters (contributors: string[]): CommitterInfo[] {
-    const contributorsCounter = contributors.reduce<Record<string, number>>((contributorsCounter, contributor) => ({
-      ...contributorsCounter,
-      [contributor]: (contributorsCounter[contributor] || 0) + 1
-    }), {})
-    return Object.entries(contributorsCounter).map(([contributor, totalCommits]) => ({
+  private extractCommitters (gitLogStats: string[]): CommitterInfo[] {
+    const contributorsCounter = gitLogStats.reduce<Record<string, {stats: string[], totalCommits: number}>>(
+      (contributorsCounter, gitLogStat) => {
+        const [contributor, stats] = gitLogStat.split(EOL)
+        return {
+          ...contributorsCounter,
+          [contributor]: {
+            stats: [...(contributorsCounter[contributor]?.stats || []), stats],
+            totalCommits: (contributorsCounter[contributor]?.totalCommits || 0) + 1
+          }
+        }
+      }, {})
+    return Object.entries(contributorsCounter).map(([contributor, { totalCommits, stats }]) => ({
       ...GitReporterService.extractContributorInfo(contributor),
+      ...GitReporterService.extractStats(stats),
       totalCommits
     }))
   }
 
-  private static extractContributorInfo (contributor: string): Omit<CommitterInfo, 'totalCommits'> {
-    const [name, email] = contributor.split('<')
+  private static extractContributorInfo (contributor: string): Pick<CommitterInfo, 'name' | 'email'> {
+    const [name, email] = contributor.split('|')
     return {
-      name: name.replace('Author: ', '').trim(),
-      email: email.replace('>', '').trim()
+      name: String(name).trim(),
+      email: String(email).trim()
     }
+  }
+
+  private static extractStats (stats: string[]): Pick<CommitterInfo, 'totalFilesChanged' | 'totalInsertions' | 'totalDeletions'> {
+    return stats.reduce((acc, stat) => {
+      const filesChanged = GitReporterService.parseStat(/\d* files? changed/, stat)
+      const insertions = GitReporterService.parseStat(/\d* insertions?/, stat)
+      const deletions = GitReporterService.parseStat(/\d* deletions?/, stat)
+      return {
+        totalFilesChanged: filesChanged + acc.totalFilesChanged,
+        totalInsertions: insertions + acc.totalInsertions,
+        totalDeletions: deletions + acc.totalDeletions
+      }
+    }, {
+      totalFilesChanged: 0,
+      totalInsertions: 0,
+      totalDeletions: 0
+    })
+  }
+
+  private static parseStat (regExp: RegExp, stat: string): number {
+    const extractedStat = regExp.exec(stat)
+    if (extractedStat) {
+      const [value] = /\d*/.exec(extractedStat[0])
+      return Number(value)
+    }
+    return 0
   }
 
   private static extractProjectName (projectPath: string): string {
@@ -106,9 +143,7 @@ export class GitReporterService {
 
   private static sortCommittersByTotalCommitsDesc (committers: CommitterInfo[]): CommitterInfo[] {
     return committers.sort((a, b) => {
-      if (a.totalCommits > b.totalCommits) return -1
-      if (a.totalCommits < b.totalCommits) return 1
-      return 0
+      return b.totalCommits - a.totalCommits || a.name.localeCompare(b.name)
     })
   }
 }

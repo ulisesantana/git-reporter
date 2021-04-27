@@ -31,7 +31,7 @@ describe('Git Reporter Service should', () => {
       expect(report.totalCommits).toBe(expectedReport.totalCommits)
     })
 
-    it('retrieve total commits for each committer', async () => {
+    it('retrieve total commits, files changed, insertions and deletions for each committer', async () => {
       const report = await new GitReporterService(gitReporterRepository, loggerMock)
         .generateReport(['path/irrelevant'], 4)
 

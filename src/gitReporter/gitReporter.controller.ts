@@ -55,8 +55,15 @@ Contributions by author:
 ${report.committers.map(({
       name,
       email,
-      totalCommits
-    }) => `    ${name} (${email}): ${totalCommits}`).join(EOL)}
+      totalCommits,
+      totalFilesChanged,
+      totalInsertions,
+      totalDeletions
+    }) => `${EOL}    ${name} (${email}):
+      Commits: ${totalCommits}
+      Files changed: ${totalFilesChanged}
+      Insertions: ${totalInsertions}
+      Deletions: ${totalDeletions}`).join(EOL)}
 `
   }
 }
