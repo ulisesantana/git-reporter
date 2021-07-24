@@ -7,8 +7,6 @@
   },
   "files": [
     "build",
-    "!build/**/*.test.*",
-    "!build/setupTests.*",
     "!build/**/*.js.map"
   ],
   "scripts": {
