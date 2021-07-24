@@ -23,15 +23,24 @@ const options = getopt({
     args: 1,
     description: 'Number of weeks in the past to look for commits.',
     default: 4
+  },
+  version: {
+    key: 'v',
+    args: 0,
+    description: 'Return the version for git-reporter.'
   }
 })
 
-gitReporter
-  .exec({
-    allInDirectory: options.allInDirectory,
-    anonymize: Boolean(options.anonymize),
-    projects: Array.isArray(options.args) ? options.args : [],
-    slackUrl: options.slackUrl,
-    weeks: options.weeks
-  })
-  .catch(err => console.error(err.toString()))
+if (options.version) {
+  console.log(require('../package.json').version)
+} else {
+  gitReporter
+    .exec({
+      allInDirectory: options.allInDirectory,
+      anonymize: Boolean(options.anonymize),
+      projects: Array.isArray(options.args) ? options.args : [],
+      slackUrl: options.slackUrl,
+      weeks: options.weeks
+    })
+    .catch(err => console.error(err.toString()))
+}
