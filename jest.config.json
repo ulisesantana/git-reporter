@@ -1,8 +1,8 @@
 {
   "roots": [
-    "<rootDir>/src"
+    "<rootDir>/test"
   ],
-  "setupFilesAfterEnv": ["<rootDir>/src/setupTests.ts"],
+  "setupFilesAfterEnv": ["<rootDir>/test/setupTests.ts"],
   "testMatch": [
     "**/__tests__/**/*.+(ts|js)",
     "**/?(*.)+(spec|test).+(ts|js)"

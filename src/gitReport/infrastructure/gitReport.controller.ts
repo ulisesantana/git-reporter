@@ -1,8 +1,9 @@
 import { inject, injectable } from 'tsyringe'
-import { GitReport, GitReporterService } from './gitReporter.service'
+import { GitReportService } from '../domain/gitReport.service'
 import { EOL } from 'os'
-import { Notifier } from '../notifier'
-import { Logger } from '../logger'
+import { Notifier } from '../../notifier'
+import { Logger } from '../../logger'
+import { AccumulatedGitReport } from '../domain/gitReport'
 
 interface GitReporterOptions {
   allInDirectory: string
@@ -13,9 +14,9 @@ interface GitReporterOptions {
 }
 
 @injectable()
-export class GitReporterController {
+export class GitReportController {
   constructor (
-    @inject(GitReporterService) private readonly service: GitReporterService,
+    @inject(GitReportService) private readonly service: GitReportService,
     @inject(Notifier) private readonly notifier: Notifier,
     @inject(Logger) private readonly log: Logger
   ) {}
@@ -27,7 +28,7 @@ export class GitReporterController {
     weeks,
     slackUrl
   }: GitReporterOptions) {
-    let report: GitReport
+    let report: AccumulatedGitReport
     if (allInDirectory) {
       report = anonymize
         ? await this.service.generateAnonymousReportForAllProjectsInADirectory(allInDirectory, weeks)
@@ -37,7 +38,7 @@ export class GitReporterController {
         ? await this.service.generateAnonymousReport(projects, weeks)
         : await this.service.generateReport(projects, weeks)
     }
-    const reportOutput = GitReporterController.generateReportOutput(report)
+    const reportOutput = GitReportController.generateReportOutput(report)
     this.log.info(reportOutput)
     if (slackUrl) {
       await this.notifier.publishOnSlack(slackUrl, reportOutput)
@@ -45,7 +46,7 @@ export class GitReporterController {
     }
   }
 
-  private static generateReportOutput (report: GitReport): string {
+  private static generateReportOutput (report: AccumulatedGitReport): string {
     return `
 Report for: 
 ${report.projects.map(project => `    ${project}`).join(EOL)}

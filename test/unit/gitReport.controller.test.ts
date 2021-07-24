@@ -1,24 +1,24 @@
 import {
   expectedReport, expectedReportOutput
-} from './fixture'
+} from '../fixture'
 import { container } from 'tsyringe'
-import { GitReporterService } from './gitReporter.service'
-import { Notifier } from '../notifier'
-import { GitReporterController } from './gitReporter.controller'
-import { Logger } from '../logger'
+import { GitReportService } from '../../src/gitReport/domain/gitReport.service'
+import { Notifier } from '../../src/notifier'
+import { GitReportController } from '../../src/gitReport/infrastructure/gitReport.controller'
+import { Logger } from '../../src/logger'
 
 describe('Git Reporter Controller should', () => {
-  let gitReporterServiceMock: GitReporterService
+  let gitReportServiceMock: GitReportService
   let notifierMock: Notifier
   let loggerMock: Logger
 
   beforeEach(() => {
     container.clearInstances()
-    gitReporterServiceMock = container.resolve(GitReporterService)
-    gitReporterServiceMock.generateReport = jest.fn(async () => expectedReport)
-    gitReporterServiceMock.generateAnonymousReport = jest.fn(async () => expectedReport)
-    gitReporterServiceMock.generateReportForAllProjectsInADirectory = jest.fn(async () => expectedReport)
-    gitReporterServiceMock.generateAnonymousReportForAllProjectsInADirectory = jest.fn(async () => expectedReport)
+    gitReportServiceMock = container.resolve(GitReportService)
+    gitReportServiceMock.generateReport = jest.fn(async () => expectedReport)
+    gitReportServiceMock.generateAnonymousReport = jest.fn(async () => expectedReport)
+    gitReportServiceMock.generateReportForAllProjectsInADirectory = jest.fn(async () => expectedReport)
+    gitReportServiceMock.generateAnonymousReportForAllProjectsInADirectory = jest.fn(async () => expectedReport)
 
     notifierMock = container.resolve(Notifier)
     notifierMock.publishOnSlack = jest.fn(async () => {})
@@ -29,7 +29,7 @@ describe('Git Reporter Controller should', () => {
   })
 
   it('print report for all the given projects', async () => {
-    await new GitReporterController(gitReporterServiceMock, notifierMock, loggerMock)
+    await new GitReportController(gitReportServiceMock, notifierMock, loggerMock)
       .exec({
         allInDirectory: '',
         anonymize: false,
@@ -39,11 +39,11 @@ describe('Git Reporter Controller should', () => {
       })
 
     expect(loggerMock.info).toHaveBeenNthCalledWith(1, expectedReportOutput)
-    expect(gitReporterServiceMock.generateReport).toBeCalled()
+    expect(gitReportServiceMock.generateReport).toBeCalled()
   })
 
   it('print anonymized report for all the given projects', async () => {
-    await new GitReporterController(gitReporterServiceMock, notifierMock, loggerMock)
+    await new GitReportController(gitReportServiceMock, notifierMock, loggerMock)
       .exec({
         allInDirectory: '',
         anonymize: true,
@@ -53,11 +53,11 @@ describe('Git Reporter Controller should', () => {
       })
 
     expect(loggerMock.info).toHaveBeenNthCalledWith(1, expectedReportOutput)
-    expect(gitReporterServiceMock.generateAnonymousReport).toBeCalled()
+    expect(gitReportServiceMock.generateAnonymousReport).toBeCalled()
   })
 
   it('print report for all the projects inside the given directory', async () => {
-    await new GitReporterController(gitReporterServiceMock, notifierMock, loggerMock)
+    await new GitReportController(gitReportServiceMock, notifierMock, loggerMock)
       .exec({
         allInDirectory: 'path/irrelevant',
         anonymize: false,
@@ -67,11 +67,11 @@ describe('Git Reporter Controller should', () => {
       })
 
     expect(loggerMock.info).toHaveBeenNthCalledWith(1, expectedReportOutput)
-    expect(gitReporterServiceMock.generateReportForAllProjectsInADirectory).toBeCalled()
+    expect(gitReportServiceMock.generateReportForAllProjectsInADirectory).toBeCalled()
   })
 
   it('print anonymized report for all the projects inside the given directory', async () => {
-    await new GitReporterController(gitReporterServiceMock, notifierMock, loggerMock)
+    await new GitReportController(gitReportServiceMock, notifierMock, loggerMock)
       .exec({
         allInDirectory: 'path/irrelevant',
         anonymize: true,
@@ -81,11 +81,11 @@ describe('Git Reporter Controller should', () => {
       })
 
     expect(loggerMock.info).toHaveBeenNthCalledWith(1, expectedReportOutput)
-    expect(gitReporterServiceMock.generateAnonymousReportForAllProjectsInADirectory).toBeCalled()
+    expect(gitReportServiceMock.generateAnonymousReportForAllProjectsInADirectory).toBeCalled()
   })
 
   it('notify report on slack', async () => {
-    await new GitReporterController(gitReporterServiceMock, notifierMock, loggerMock)
+    await new GitReportController(gitReportServiceMock, notifierMock, loggerMock)
       .exec({
         allInDirectory: '',
         anonymize: false,
@@ -102,7 +102,7 @@ describe('Git Reporter Controller should', () => {
   })
 
   it('not notify report on slack if slack url is an empty string', async () => {
-    await new GitReporterController(gitReporterServiceMock, notifierMock, loggerMock)
+    await new GitReportController(gitReportServiceMock, notifierMock, loggerMock)
       .exec({
         allInDirectory: '',
         anonymize: false,

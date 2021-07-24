@@ -1,6 +1,6 @@
-import { GitReport } from './gitReporter.service'
+import { AccumulatedGitReport } from '../src/gitReport/domain/gitReport'
 
-export const expectedReport: GitReport = {
+export const expectedReport: AccumulatedGitReport = {
   weeks: 4,
   projects: ['irrelevant'],
   totalCommits: 13,
