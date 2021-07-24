@@ -38,7 +38,7 @@ describe('Git Reporter Controller should', () => {
         slackUrl: 'irrelevant'
       })
 
-    expect(loggerMock.info).toHaveBeenNthCalledWith(1, expectedReportOutput)
+    expect(loggerMock.info).toHaveBeenNthCalledWith(2, expectedReportOutput)
     expect(gitReportServiceMock.generateReport).toBeCalled()
   })
 
@@ -52,7 +52,7 @@ describe('Git Reporter Controller should', () => {
         slackUrl: 'irrelevant'
       })
 
-    expect(loggerMock.info).toHaveBeenNthCalledWith(1, expectedReportOutput)
+    expect(loggerMock.info).toHaveBeenNthCalledWith(2, expectedReportOutput)
     expect(gitReportServiceMock.generateAnonymousReport).toBeCalled()
   })
 
@@ -66,7 +66,7 @@ describe('Git Reporter Controller should', () => {
         slackUrl: 'irrelevant'
       })
 
-    expect(loggerMock.info).toHaveBeenNthCalledWith(1, expectedReportOutput)
+    expect(loggerMock.info).toHaveBeenNthCalledWith(2, expectedReportOutput)
     expect(gitReportServiceMock.generateReportForAllProjectsInADirectory).toBeCalled()
   })
 
@@ -80,7 +80,7 @@ describe('Git Reporter Controller should', () => {
         slackUrl: 'irrelevant'
       })
 
-    expect(loggerMock.info).toHaveBeenNthCalledWith(1, expectedReportOutput)
+    expect(loggerMock.info).toHaveBeenNthCalledWith(2, expectedReportOutput)
     expect(gitReportServiceMock.generateAnonymousReportForAllProjectsInADirectory).toBeCalled()
   })
 
@@ -96,7 +96,7 @@ describe('Git Reporter Controller should', () => {
 
     expect(notifierMock.publishOnSlack).toBeCalledWith('irrelevant', expectedReportOutput)
     expect(loggerMock.info).toHaveBeenNthCalledWith(
-      2,
+      3,
       'Report published on Slack.'
     )
   })

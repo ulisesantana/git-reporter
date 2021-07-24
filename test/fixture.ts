@@ -88,7 +88,7 @@ export const expectedReportForMultipleRepositories = {
 
 export const expectedReportOutput = `
 Report for: 
-    irrelevant
+  - irrelevant
 
 Total commits in the last 4 weeks: 13
 Contributions by author:

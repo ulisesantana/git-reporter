@@ -9,14 +9,14 @@ import { EOL } from 'os'
 export class GitReportRepository {
   constructor (
     @inject(Command) private readonly command: Command,
-    @inject(Logger) private readonly log: Logger
+    @inject(Logger) private readonly logger: Logger
   ) {}
 
   async * readGitReports (projectsPaths: string[], weeks: number): AsyncGenerator<GitReport> {
     let amountOfGitLogRead = 1
     for (const projectPath of projectsPaths) {
       const gitLog = await this.readGitLog(projectPath, weeks)
-      this.log.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
+      this.logger.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
       amountOfGitLogRead += 1
       yield this.mapToDomain(gitLog, weeks, projectPath)
     }

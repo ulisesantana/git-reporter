@@ -26,7 +26,7 @@ export class Logger extends Writable {
   }
 
   private formatOutput (...text: string[]) {
-    const output = format('%s', ...text)
+    const output = format('%s', ...text, EOL)
     this.write(`${output}${EOL}`)
     return output
   }

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { version } = require('../package.json')
 const { getopt } = require('stdio')
 const { gitReporter } = require('../build')
 
@@ -32,8 +33,9 @@ const options = getopt({
 })
 
 if (options.version) {
-  console.log(require('../package.json').version)
+  console.log(version)
 } else {
+  console.log(`Initializing git reporter ${version}`)
   gitReporter
     .exec({
       allInDirectory: options.allInDirectory,
