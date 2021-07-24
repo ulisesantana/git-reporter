@@ -12,11 +12,14 @@ export class GitReportRepository {
     @inject(Logger) private readonly log: Logger
   ) {}
 
-  async readGitReport (projectPath: string, weeks: number): Promise<GitReport> {
-    this.log.info(`Reading git log from ${projectPath} for the last ${weeks}.`)
-    const gitLog = await this.readGitLog(projectPath, weeks)
-    this.log.info(`Generating git report from ${projectPath} for the last ${weeks}.`)
-    return this.mapToDomain(gitLog, weeks, projectPath)
+  async * readGitReports (projectsPaths: string[], weeks: number): AsyncGenerator<GitReport> {
+    let amountOfGitLogRead = 1
+    for (const projectPath of projectsPaths) {
+      const gitLog = await this.readGitLog(projectPath, weeks)
+      this.log.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
+      amountOfGitLogRead += 1
+      yield this.mapToDomain(gitLog, weeks, projectPath)
+    }
   }
 
   async readGitProjects (directoryPath: string): Promise<string[]> {

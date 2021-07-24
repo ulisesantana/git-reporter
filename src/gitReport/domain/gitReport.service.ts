@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 import { GitReportRepository } from '../infrastructure/gitReport.repository'
-import { AccumulatedGitReport, GitReporter } from './gitReport'
+import { AccumulatedGitReport, GitReport, GitReporter } from './gitReport'
 
 @injectable()
 export class GitReportService {
@@ -19,7 +19,10 @@ export class GitReportService {
   }
 
   async generateReport (projectsPaths: string[], weeks: number): Promise<AccumulatedGitReport> {
-    const reports = await Promise.all(projectsPaths.map(projectPath => this.repository.readGitReport(projectPath, weeks)))
+    const reports = [] as GitReport[]
+    for await (const report of this.repository.readGitReports(projectsPaths, weeks)) {
+      reports.push(report)
+    }
     return GitReporter.generateAccumulatedGitReport(reports)
   }
 
