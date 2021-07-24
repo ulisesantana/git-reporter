@@ -7,6 +7,7 @@
   },
   "files": [
     "build",
+    "bin",
     "!build/**/*.js.map"
   ],
   "scripts": {
