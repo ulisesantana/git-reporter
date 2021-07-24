@@ -36,7 +36,7 @@ export class GitReportRepository {
       weeks,
       project: GitReportRepository.extractProjectName(projectPath),
       totalCommits: contributors.length,
-      committers: GitReportRepository.sortCommittersByTotalCommitsDesc(this.extractCommitters(contributors))
+      committers: this.extractCommitters(contributors)
     }
   }
 
@@ -102,11 +102,5 @@ export class GitReportRepository {
   private static extractProjectName (projectPath: string): string {
     const absolutePath = path.resolve(projectPath)
     return absolutePath.slice(absolutePath.lastIndexOf('/') + 1)
-  }
-
-  private static sortCommittersByTotalCommitsDesc (committers: CommitterInfo[]): CommitterInfo[] {
-    return committers.sort((a, b) => {
-      return b.totalCommits - a.totalCommits || a.name.localeCompare(b.name)
-    })
   }
 }

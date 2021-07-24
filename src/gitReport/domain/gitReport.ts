@@ -25,7 +25,12 @@ export class GitReporter {
     return reports.reduce<AccumulatedGitReport>((acc, report) => ({
       weeks: report.weeks,
       projects: [...acc.projects, report.project],
-      committers: GitReporter.combineCommitters(acc.committers, report.committers),
+      committers: GitReporter.sortCommittersByTotalCommitsDesc(
+        GitReporter.combineCommitters(
+          acc.committers,
+          report.committers
+        )
+      ),
       totalCommits: acc.totalCommits + report.totalCommits
     }), {
       weeks: 0,
@@ -76,5 +81,11 @@ export class GitReporter {
       totalCommits: 0,
       totalFilesChanged: 0
     }
+  }
+
+  private static sortCommittersByTotalCommitsDesc (committers: CommitterInfo[]): CommitterInfo[] {
+    return committers.sort((a, b) => {
+      return b.totalCommits - a.totalCommits || a.name.localeCompare(b.name)
+    })
   }
 }
