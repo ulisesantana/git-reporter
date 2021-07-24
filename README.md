@@ -3,14 +3,20 @@
 A command line tool for contribution reporting on git projects.
 
 ```shell
-git-reporter ./smarthome
+npx git-reporter smarthome -w 12 
+(1/1) Read git log for smarthome
 
 Report for: 
     smarthome
 
-Total commits in the last 4 weeks: 30
+Total commits in the last 12 weeks: 17
 Contributions by author:
-    Ulises Santana (ulisesantana@gmail.com): 30
+
+    Ulises Santana (ulisesantana@gmail.com):
+      Commits: 17
+      Files changed: 127
+      Insertions: 1337
+      Deletions: 997
 ```
 
 ## Usage
@@ -42,6 +48,7 @@ The following options are supported:
   --anonymize                   	Anonymize author names and emails.
   -s, --slackUrl <ARG1>         	Slack url for publishing report.
   -w, --weeks <ARG1>            	Number of weeks in the past to look for commits. ("4" by default)
+  -v, --version               	Return the version for git-reporter.
 ```
 
 ## ⚠️ Things to bear in mind
