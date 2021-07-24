@@ -16,7 +16,7 @@
     "prestart": "npm run build",
     "start": "node build/index.js",
     "dev": "npm run build -- --watch & nodemon build/index.js",
-    "build": "npm run lint && npm test && tsc",
+    "build": "rm -rf build && npm run lint && npm test && tsc -p tsconfig.build.json",
     "docs:update": "auto-changelog -p && git add CHANGELOG.md && git commit -m \"📝 update changelog\"",
     "prepublishOnly": "npm run tag",
     "tag": "TAG=v$(node -pe \"require('./package.json').version\"); git commit -am \"🔖 $TAG\" && git tag $TAG && npm run docs:update && git push && git push --tags",
