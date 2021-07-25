@@ -13,11 +13,11 @@ export class Logger extends Writable {
     })
   }
 
-  info (...text: string[]) {
+  info (...text: string[]): void {
     process.stdout.write(this.formatOutput(...text))
   }
 
-  error (...text: string[]) {
+  error (...text: string[]): void {
     process.stderr.write(this.formatOutput(...text))
   }
 
