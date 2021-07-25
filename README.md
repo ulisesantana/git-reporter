@@ -6,10 +6,13 @@ A command line tool for contribution reporting on git projects.
 
 ```shell
 npx git-reporter smarthome -w 12 
-(1/1) Read git log for smarthome
+🔍 Starting to fetch git logs for: 
+  - smarthome
+ 
+(1/1) Read git log for /home/ulises/projects/js/smarthome 
 
 Report for: 
-    smarthome
+  - smarthome
 
 Total commits in the last 12 weeks: 17
 Contributions by author:
