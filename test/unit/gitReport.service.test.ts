@@ -3,7 +3,7 @@ import {
   expectedReport,
   expectedReportForMultipleRepositories,
   rawGitLog
-} from '../fixture'
+} from '../fixtures'
 import { container } from 'tsyringe'
 import { GitReportRepository } from '../../src/gitReport/infrastructure/gitReport.repository'
 import { Logger } from '../../src/logger'

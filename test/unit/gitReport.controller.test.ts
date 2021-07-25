@@ -1,6 +1,6 @@
 import {
   expectedReport, expectedReportOutput
-} from '../fixture'
+} from '../fixtures'
 import { container } from 'tsyringe'
 import { GitReportService } from '../../src/gitReport/domain/gitReport.service'
 import { Notifier } from '../../src/notifier'
