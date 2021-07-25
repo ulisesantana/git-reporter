@@ -1,6 +1,7 @@
 # git-reporter
 [![Build Status](https://travis-ci.com/ulisesantana/git-reporter.png?branch=main)](https://travis-ci.com/ulisesantana/git-reporter)
 [![codecov](https://codecov.io/gh/ulisesantana/git-reporter/branch/main/graph/badge.svg?token=6N32FMeuth)](https://codecov.io/gh/ulisesantana/git-reporter)
+
 A command line tool for contribution reporting on git projects.
 
 ```shell
