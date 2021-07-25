@@ -4,6 +4,7 @@ import path from 'path'
 import { Logger } from '../../logger'
 import { CommitterInfo, GitReport } from '../domain/gitReport'
 import { EOL } from 'os'
+import { GitReportList } from '../domain/gitReportList'
 
 @injectable()
 export class GitReportRepository {
@@ -12,14 +13,12 @@ export class GitReportRepository {
     @inject(Logger) private readonly logger: Logger
   ) {}
 
-  async * readGitReports (projectsPaths: string[], weeks: number): AsyncGenerator<GitReport> {
-    let amountOfGitLogRead = 1
-    for (const projectPath of projectsPaths) {
-      const gitLog = await this.readGitLog(projectPath, weeks)
-      this.logger.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
-      amountOfGitLogRead += 1
-      yield this.mapToDomain(gitLog, weeks, projectPath)
+  async readGitReports (projectsPaths: string[], weeks: number): Promise<GitReportList> {
+    const reports = [] as GitReport[]
+    for await (const report of this.readGitReportsGenerator(projectsPaths, weeks)) {
+      reports.push(report)
     }
+    return new GitReportList(reports)
   }
 
   async readGitProjects (directoryPath: string): Promise<string[]> {
@@ -30,14 +29,23 @@ export class GitReportRepository {
     ).filter(Boolean)
   }
 
+  private async * readGitReportsGenerator (projectsPaths: string[], weeks: number): AsyncGenerator<GitReport> {
+    let amountOfGitLogRead = 1
+    for (const projectPath of projectsPaths) {
+      const gitLog = await this.readGitLog(projectPath, weeks)
+      this.logger.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
+      amountOfGitLogRead += 1
+      yield this.mapToDomain(gitLog, weeks, projectPath)
+    }
+  }
+
   private mapToDomain (gitLog: string, weeks: number, projectPath: string): GitReport {
     const contributors = gitLog.split(EOL.concat(EOL)).filter(Boolean)
-    return {
+    return new GitReport({
       weeks,
-      project: GitReportRepository.extractProjectName(projectPath),
-      totalCommits: contributors.length,
+      projects: [GitReportRepository.extractProjectName(projectPath)],
       committers: this.extractCommitters(contributors)
-    }
+    })
   }
 
   private async readGitLog (projectPath: string, weeks: number): Promise<string> {

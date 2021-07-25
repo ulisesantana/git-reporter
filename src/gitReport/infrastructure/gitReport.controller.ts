@@ -3,7 +3,7 @@ import { GitReportService } from '../domain/gitReport.service'
 import { EOL } from 'os'
 import { Notifier } from '../../notifier'
 import { Logger } from '../../logger'
-import { AccumulatedGitReport, GitReport } from '../domain/gitReport'
+import { GitReport } from '../domain/gitReport'
 import path from 'path'
 
 interface GitReporterOptions {
@@ -70,7 +70,7 @@ export class GitReportController {
     }
   }
 
-  private static generateReportOutput (report: AccumulatedGitReport): string {
+  private static generateReportOutput (report: GitReport): string {
     return `
 Report for: 
 ${report.projects.map(project => `  - ${project}`).join(EOL)}

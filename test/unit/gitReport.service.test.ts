@@ -71,7 +71,13 @@ describe('Git Reporter Service should', () => {
       const report = await new GitReportService(gitReporterRepository)
         .generateReport(['path/irrelevant', 'path/irrelevant'], 4)
 
-      expect(report).toStrictEqual(expectedReportForMultipleRepositories)
+      expect(report.committers).toStrictEqual(expectedReportForMultipleRepositories.committers)
+      expect(report.projects).toStrictEqual(expectedReportForMultipleRepositories.projects)
+      expect(report.weeks).toStrictEqual(expectedReportForMultipleRepositories.weeks)
+      expect(report.totalCommits).toStrictEqual(expectedReportForMultipleRepositories.totalCommits)
+      expect(report.totalFilesChanged).toStrictEqual(expectedReportForMultipleRepositories.totalFilesChanged)
+      expect(report.totalInsertions).toStrictEqual(expectedReportForMultipleRepositories.totalInsertions)
+      expect(report.totalDeletions).toStrictEqual(expectedReportForMultipleRepositories.totalDeletions)
     })
 
     it('not fail if no projects are given', async () => {

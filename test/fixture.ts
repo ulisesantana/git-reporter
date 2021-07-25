@@ -1,9 +1,15 @@
-import { AccumulatedGitReport } from '../src/gitReport/domain/gitReport'
+import { GitReport } from '../src/gitReport/domain/gitReport'
 
-export const expectedReport: AccumulatedGitReport = {
+export const expectedReport: GitReport = {
   weeks: 4,
   projects: ['irrelevant'],
   totalCommits: 13,
+  totalFilesChanged: 25,
+  totalInsertions: 158,
+  totalDeletions: 39,
+  anonymize (): GitReport {
+    return this
+  },
   committers: [
     {
       email: 'rtrott@gmail.com',
@@ -72,10 +78,16 @@ export const expectedReport: AccumulatedGitReport = {
   ]
 }
 
-export const expectedReportForMultipleRepositories = {
+export const expectedReportForMultipleRepositories: GitReport = {
   ...expectedReport,
   projects: ['irrelevant', 'irrelevant'],
   totalCommits: expectedReport.totalCommits * 2,
+  totalFilesChanged: expectedReport.totalFilesChanged * 2,
+  totalInsertions: expectedReport.totalInsertions * 2,
+  totalDeletions: expectedReport.totalDeletions * 2,
+  anonymize (): GitReport {
+    return this
+  },
   committers: expectedReport.committers.map(committer => ({
     email: committer.email,
     name: committer.name,

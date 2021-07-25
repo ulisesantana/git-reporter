@@ -9,83 +9,69 @@ export interface CommitterInfo {
   totalCommits: number
 }
 
-export interface GitReport {
-  totalCommits: number
+interface GitReportBase {
   committers: CommitterInfo[]
   weeks: number,
-  project: string,
+  projects: string[],
 }
 
-export type AccumulatedGitReport = Omit<GitReport, 'project'> & {
-  projects: string[]
+interface GitReportTotals {
+  totalCommits: number
+  totalFilesChanged: number
+  totalInsertions: number
+  totalDeletions: number
 }
 
-export class GitReporter {
-  static generateAccumulatedGitReport (reports: GitReport[]): AccumulatedGitReport {
-    return reports.reduce<AccumulatedGitReport>((acc, report) => ({
-      weeks: report.weeks,
-      projects: [...acc.projects, report.project],
-      committers: GitReporter.sortCommittersByTotalCommitsDesc(
-        GitReporter.combineCommitters(
-          acc.committers,
-          report.committers
-        )
-      ),
-      totalCommits: acc.totalCommits + report.totalCommits
-    }), {
-      weeks: 0,
-      totalCommits: 0,
-      committers: [],
-      projects: []
-    } as AccumulatedGitReport)
+export class GitReport {
+  public readonly committers: CommitterInfo[]
+  public readonly weeks: number
+  public readonly projects: string[]
+
+  public readonly totalCommits: number
+  public readonly totalFilesChanged: number
+  public readonly totalInsertions: number
+  public readonly totalDeletions: number
+
+  constructor ({ committers, weeks, projects }: GitReportBase) {
+    const totals = GitReport.computeTotals(committers)
+    this.committers = GitReport.sortCommittersByTotalCommitsDesc(committers)
+    this.weeks = weeks
+    this.projects = projects
+    this.totalCommits = totals.totalCommits
+    this.totalDeletions = totals.totalDeletions
+    this.totalFilesChanged = totals.totalFilesChanged
+    this.totalInsertions = totals.totalInsertions
   }
 
-  static anonymizeAccumulatedGitReport (report: AccumulatedGitReport): AccumulatedGitReport {
-    return {
-      ...report,
-      committers: report.committers.map(committer => ({
+  anonymize (): GitReport {
+    return new GitReport({
+      weeks: this.weeks,
+      projects: this.projects,
+      committers: this.committers.map(committer => ({
         ...committer,
         email: faker.internet.email(),
         name: faker.name.findName()
       }))
-    }
-  }
-
-  private static combineCommitters (accCommitters: CommitterInfo[], committers: CommitterInfo[]): CommitterInfo[] {
-    return Object.values([...accCommitters, ...committers].reduce<Record<string, CommitterInfo>>(
-      (committersDictionary, committer) => {
-        const accumulatedCommitterInfo = GitReporter.getCommitter(committer.email, committersDictionary)
-        return {
-          ...committersDictionary,
-          [committer.email]: {
-            email: committer.email,
-            name: committer.name,
-            totalDeletions: committer.totalDeletions + accumulatedCommitterInfo.totalDeletions,
-            totalInsertions: committer.totalInsertions + accumulatedCommitterInfo.totalInsertions,
-            totalCommits: committer.totalCommits + accumulatedCommitterInfo.totalCommits,
-            totalFilesChanged: committer.totalFilesChanged + accumulatedCommitterInfo.totalFilesChanged
-          }
-        }
-      },
-      {} as Record<string, CommitterInfo>
-    ))
-  }
-
-  private static getCommitter (committerEmail: string, committersDictionary: Record<string, CommitterInfo>): CommitterInfo {
-    const committer = committersDictionary[committerEmail]
-    return committer || {
-      email: committerEmail,
-      name: '',
-      totalDeletions: 0,
-      totalInsertions: 0,
-      totalCommits: 0,
-      totalFilesChanged: 0
-    }
+    })
   }
 
   private static sortCommittersByTotalCommitsDesc (committers: CommitterInfo[]): CommitterInfo[] {
-    return committers.sort((a, b) => {
+    return [...committers].sort((a, b) => {
       return b.totalCommits - a.totalCommits || a.name.localeCompare(b.name)
+    })
+  }
+
+  private static computeTotals (committers: CommitterInfo[]): GitReportTotals {
+    return committers.reduce<GitReportTotals>((totals, committerInfo) => ({
+      totalCommits: totals.totalCommits + committerInfo.totalCommits,
+      totalDeletions: totals.totalDeletions + committerInfo.totalDeletions,
+      totalFilesChanged: totals.totalFilesChanged + committerInfo.totalFilesChanged,
+      totalInsertions: totals.totalInsertions + committerInfo.totalInsertions
+    }), {
+      totalCommits: 0,
+      totalDeletions: 0,
+      totalFilesChanged: 0,
+      totalInsertions: 0
     })
   }
 }
