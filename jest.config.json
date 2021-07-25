@@ -11,6 +11,6 @@
     "^.+\\.(ts)?$": "ts-jest"
   },
   "coveragePathIgnorePatterns": [
-    "test/fixture.ts"
+    "test/fixtures"
   ]
 }
