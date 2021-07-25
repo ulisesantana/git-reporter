@@ -6,12 +6,8 @@ import { CommitterInfo, GitReport } from './gitReport'
 export class GitReportList {
   constructor (private values: GitReport[]) {}
 
-  getGitReports (): GitReport[] {
-    return [...this.values]
-  }
-
   mergeReports (): GitReport {
-    return this.getGitReports().reduce<GitReport>(
+    return this.values.reduce<GitReport>(
       (acc, report) => new GitReport({
         weeks: report.weeks,
         projects: [...acc.projects, ...report.projects],
