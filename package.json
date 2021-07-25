@@ -21,9 +21,7 @@
     "tag": "TAG=v$(node -pe \"require('./package.json').version\"); git commit -am \"🔖 $TAG\" && git tag $TAG && npm run docs:update && git push && git push --tags",
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
-    "test": "jest --verbose",
-    "test:watch": "npm t -- --watchAll",
-    "test:coverage": "npm t -- --coverage"
+    "test": "jest --verbose --coverage"
   },
   "repository": {
     "type": "git",
