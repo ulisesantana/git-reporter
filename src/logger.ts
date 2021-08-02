@@ -3,7 +3,7 @@ import { injectable } from 'tsyringe'
 @injectable()
 export class Logger {
   info (...text: string[]): void {
-    console.log(...text)
+    console.info(...text)
   }
 
   error (...text: string[]): void {
