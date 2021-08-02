@@ -6,7 +6,7 @@ const exec = util.promisify(execCallback)
 describe('Logger should', () => {
   beforeAll(async () => {
     await exec('npm run build:only')
-  })
+  }, 30_000)
   const testLog = function () {
     require('reflect-metadata')
     const { Logger } = require('./build/logger')
