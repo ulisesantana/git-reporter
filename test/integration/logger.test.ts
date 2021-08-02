@@ -7,15 +7,7 @@ describe('Logger should', () => {
   beforeAll(async () => {
     await exec('npm run build:only')
   }, 30_000)
-  const testLog = function () {
-    require('reflect-metadata')
-    const { Logger } = require('./build/logger')
 
-    const log = new Logger()
-
-    log.error('error')
-    log.info('info')
-  }
   it('output logs', async () => {
     const { stdout } = await exec(`node -e "(${testLog.toString()})()"`)
 
@@ -29,3 +21,13 @@ describe('Logger should', () => {
     expect(stderr).not.toContain('info')
   })
 })
+
+function testLog () {
+  require('reflect-metadata')
+  const { Logger } = require('./build/logger')
+
+  const log = new Logger()
+
+  log.error('error')
+  log.info('info')
+}
