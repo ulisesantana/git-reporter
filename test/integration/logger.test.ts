@@ -1,20 +1,31 @@
-import { Logger } from '../../src/logger'
+import util from 'util'
+import { exec as execCallback } from 'child_process'
+
+const exec = util.promisify(execCallback)
 
 describe('Logger should', () => {
-  it('output logs', () => {
-    const message = 'irrelevant'
-    const logger = new Logger()
-
-    logger.info(message)
-
-    expect(logger.getContents()).toContain(message)
+  beforeAll(async () => {
+    await exec('npm run build:only')
   })
-  it('output error', () => {
-    const message = 'irrelevant'
-    const logger = new Logger()
+  const testLog = function () {
+    require('reflect-metadata')
+    const { Logger } = require('./build/logger')
 
-    logger.error(message)
+    const log = new Logger()
 
-    expect(logger.getContents()).toContain(message)
+    log.error('error')
+    log.info('info')
+  }
+  it('output logs', async () => {
+    const { stdout } = await exec(`node -e "(${testLog.toString()})()"`)
+
+    expect(stdout).toContain('info')
+    expect(stdout).not.toContain('error')
+  })
+  it('output error', async () => {
+    const { stderr } = await exec(`node -e "(${testLog.toString()})()"`)
+
+    expect(stderr).toContain('error')
+    expect(stderr).not.toContain('info')
   })
 })
