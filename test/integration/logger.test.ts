@@ -18,12 +18,14 @@ describe('Logger should', () => {
     expect(stdout).toContain('info')
     expect(stdout).not.toContain('error')
   })
+
   it('output error', async () => {
     const { stderr } = await exec(`node -e "(${testLog.toString()})()"`)
 
     expect(stderr).toContain('error')
     expect(stderr).not.toContain('info')
   })
+
   it('use node built in console', () => {
     console.info = jest.fn()
     console.error = jest.fn()

@@ -1,10 +1,13 @@
-import { inject, injectable } from 'tsyringe'
-import { GitReportService } from '../domain/gitReport.service'
+import { container, inject, injectable } from 'tsyringe'
 import { EOL } from 'os'
 import { Notifier } from '../../notifier'
 import { Logger } from '../../logger'
 import { GitReport } from '../domain/gitReport'
 import path from 'path'
+import { GenerateAnonymizeReportForProjectsInDirectoryUseCase } from '../domain/cases/generateAnonymizeReportForProjectsInDirectory'
+import { GenerateReportForProjectsInDirectoryUseCase } from '../domain/cases/generateReportForProjectsInDirectory'
+import { GenerateAnonymizeReportUseCase } from '../domain/cases/generateAnonymizeReport'
+import { GenerateReportUseCase } from '../domain/cases/generateReport'
 
 interface GitReporterOptions {
   allInDirectory: string
@@ -17,7 +20,6 @@ interface GitReporterOptions {
 @injectable()
 export class GitReportController {
   constructor (
-    @inject(GitReportService) private readonly service: GitReportService,
     @inject(Notifier) private readonly notifier: Notifier,
     @inject(Logger) private readonly logger: Logger
   ) {}
@@ -43,8 +45,14 @@ export class GitReportController {
       path.resolve(allInDirectory)
     }.${EOL}`)
     return anonymize
-      ? await this.service.generateAnonymousReportForAllProjectsInADirectory(allInDirectory, weeks)
-      : await this.service.generateReportForAllProjectsInADirectory(allInDirectory, weeks)
+      ? await container.resolve(GenerateAnonymizeReportForProjectsInDirectoryUseCase).exec({
+        directoryPath: allInDirectory,
+        weeks
+      })
+      : await container.resolve(GenerateReportForProjectsInDirectoryUseCase).exec({
+        directoryPath: allInDirectory,
+        weeks
+      })
   }
 
   private async executeReportForMultipleProjects (projects: string[], anonymize: boolean, weeks: number) {
@@ -53,8 +61,14 @@ export class GitReportController {
       projectsAbsolutePaths.map(GitReportController.extractProjectName).join(`${EOL}  - `)
     }${EOL}`)
     return anonymize
-      ? await this.service.generateAnonymousReport(projectsAbsolutePaths, weeks)
-      : await this.service.generateReport(projectsAbsolutePaths, weeks)
+      ? await container.resolve(GenerateAnonymizeReportUseCase).exec({
+        projectsPaths: projectsAbsolutePaths,
+        weeks
+      })
+      : await container.resolve(GenerateReportUseCase).exec({
+        projectsPaths: projectsAbsolutePaths,
+        weeks
+      })
   }
 
   private async printAndNotifyReport (report: Omit<GitReport, 'project'> & { projects: string[] }, slackUrl: string) {
