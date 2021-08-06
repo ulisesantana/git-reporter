@@ -22,17 +22,7 @@ describe('generate a git report reading all git projects in a directory', () => 
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
-  it('retrieving total commits', async () => {
-    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
-      .exec({
-        directoryPath: 'path/irrelevant',
-        weeks: 4
-      })
-
-    expect(report.totalCommits).toBe(expectedReport.totalCommits)
-  })
-
-  it('retrieving total commits for each committer', async () => {
+  it('successfully', async () => {
     const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
       .exec({
         directoryPath: 'path/irrelevant',
@@ -40,25 +30,29 @@ describe('generate a git report reading all git projects in a directory', () => 
       })
 
     expect(report.committers).toStrictEqual(expectedReport.committers)
-  })
-
-  it('retrieving the amount of weeks used for generating the report', async () => {
-    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
-      .exec({
-        directoryPath: 'path/irrelevant',
-        weeks: 4
-      })
-
-    expect(report.weeks).toBe(expectedReport.weeks)
-  })
-
-  it('retrieving the projects used for generating the report', async () => {
-    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
-      .exec({
-        directoryPath: 'path/irrelevant',
-        weeks: 4
-      })
-
     expect(report.projects).toStrictEqual(expectedReport.projects)
+    expect(report.weeks).toStrictEqual(expectedReport.weeks)
+    expect(report.totalCommits).toStrictEqual(expectedReport.totalCommits)
+    expect(report.totalFilesChanged).toStrictEqual(expectedReport.totalFilesChanged)
+    expect(report.totalInsertions).toStrictEqual(expectedReport.totalInsertions)
+    expect(report.totalDeletions).toStrictEqual(expectedReport.totalDeletions)
+  })
+
+  it('returning an empty report if no project paths are given', async () => {
+    gitReporterRepository.readGitProjects = jest.fn(async () => [])
+
+    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
+      .exec({
+        directoryPath: 'path/irrelevant',
+        weeks: 4
+      })
+
+    expect(report.committers).toStrictEqual([])
+    expect(report.projects).toStrictEqual([])
+    expect(report.weeks).toBe(0)
+    expect(report.totalCommits).toBe(0)
+    expect(report.totalFilesChanged).toBe(0)
+    expect(report.totalInsertions).toBe(0)
+    expect(report.totalDeletions).toBe(0)
   })
 })

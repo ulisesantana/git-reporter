@@ -22,47 +22,7 @@ describe('generate a git report based on project paths', () => {
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
-  it('retrieving total commits between all committers', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: ['path/irrelevant'],
-        weeks: 4
-      })
-
-    expect(report.totalCommits).toBe(expectedReport.totalCommits)
-  })
-
-  it('retrieving total insertions between all committers', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: ['path/irrelevant'],
-        weeks: 4
-      })
-
-    expect(report.totalInsertions).toBe(expectedReport.totalInsertions)
-  })
-
-  it('retrieving total deletions between all committers', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: ['path/irrelevant'],
-        weeks: 4
-      })
-
-    expect(report.totalDeletions).toBe(expectedReport.totalDeletions)
-  })
-
-  it('retrieving total files changed between all committers', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: ['path/irrelevant'],
-        weeks: 4
-      })
-
-    expect(report.totalFilesChanged).toBe(expectedReport.totalFilesChanged)
-  })
-
-  it('retrieving total commits, files changed, insertions and deletions for each committer', async () => {
+  it('processing a single repository', async () => {
     const report = await new GenerateReportUseCase(gitReporterRepository)
       .exec({
         projectsPaths: ['path/irrelevant'],
@@ -70,26 +30,12 @@ describe('generate a git report based on project paths', () => {
       })
 
     expect(report.committers).toStrictEqual(expectedReport.committers)
-  })
-
-  it('retrieving the amount of weeks used for generating the report', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: ['path/irrelevant'],
-        weeks: 4
-      })
-
-    expect(report.weeks).toBe(expectedReport.weeks)
-  })
-
-  it('retrieving the projects used for generating the report', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: ['path/irrelevant'],
-        weeks: 4
-      })
-
     expect(report.projects).toStrictEqual(expectedReport.projects)
+    expect(report.weeks).toStrictEqual(expectedReport.weeks)
+    expect(report.totalCommits).toStrictEqual(expectedReport.totalCommits)
+    expect(report.totalFilesChanged).toStrictEqual(expectedReport.totalFilesChanged)
+    expect(report.totalInsertions).toStrictEqual(expectedReport.totalInsertions)
+    expect(report.totalDeletions).toStrictEqual(expectedReport.totalDeletions)
   })
 
   it('processing multiple repositories', async () => {

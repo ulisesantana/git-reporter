@@ -5,23 +5,18 @@ import { container } from 'tsyringe'
 import { Command } from '../../src/command'
 import { GenerateAnonymizeReportUseCase } from '../../src/gitReport/domain/cases/generateAnonymizeReport'
 
-let gitReporterRepository: GitReportRepository
-let loggerMock: Logger
-
-beforeEach(() => {
+it('generate a git report based on project paths anonymizing committers personal data', async () => {
   container.clearInstances()
   const commandMock = container.resolve(Command)
   commandMock.run = async () => rawGitLog
   container.registerInstance(Command, commandMock)
-  loggerMock = container.resolve(Logger)
+  const loggerMock = container.resolve(Logger)
   loggerMock.info = jest.fn()
   loggerMock.error = jest.fn()
   container.registerInstance(Logger, loggerMock)
-  gitReporterRepository = container.resolve(GitReportRepository)
+  const gitReporterRepository = container.resolve(GitReportRepository)
   gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
-})
 
-it('generate a git report based on project paths anonymizing committers personal data', async () => {
   const report = await new GenerateAnonymizeReportUseCase(gitReporterRepository)
     .exec({
       projectsPaths: ['path/irrelevant'],
