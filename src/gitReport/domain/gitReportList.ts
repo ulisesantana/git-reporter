@@ -6,6 +6,12 @@ import { CommitterInfo, GitReport } from './gitReport'
 export class GitReportList {
   constructor (private values: GitReport[]) {}
 
+  private static readonly emptyGitReport = new GitReport({
+    committers: [],
+    projects: [],
+    weeks: 0
+  })
+
   mergeReports (): GitReport {
     return this.values.reduce<GitReport>(
       (acc, report) => new GitReport({
@@ -13,7 +19,7 @@ export class GitReportList {
         projects: [...acc.projects, ...report.projects],
         committers: GitReportList.combineCommitters(acc.committers, report.committers)
       }),
-      new GitReport({ committers: [], projects: [], weeks: 0 })
+      GitReportList.emptyGitReport
     )
   }
 
