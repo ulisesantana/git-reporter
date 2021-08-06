@@ -7,6 +7,7 @@ import { GitReportRepository } from '../../src/gitReport/infrastructure/gitRepor
 import { Command } from '../../src/command'
 
 describe('Git Reporter Controller should', () => {
+  let gitReporterRepository: GitReportRepository
   let notifierMock: Notifier
   let loggerMock: Logger
 
@@ -16,7 +17,7 @@ describe('Git Reporter Controller should', () => {
     commandMock.run = async () => rawGitLog
     container.registerInstance(Command, commandMock)
 
-    const gitReporterRepository = container.resolve(GitReportRepository)
+    gitReporterRepository = container.resolve(GitReportRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
     container.registerInstance(GitReportRepository, gitReporterRepository)
 
@@ -96,6 +97,24 @@ describe('Git Reporter Controller should', () => {
       Deletions: 15`
     )
     expect(loggerInfoSecondCallWithFirstParameter).not.toContain('Rich Trott (rtrott@gmail.com):')
+  })
+
+  it('print there is no projects to generate report if no git repository is found in the given directory', async () => {
+    gitReporterRepository.readGitProjects = jest.fn(async () => [])
+
+    await new GitReportController(notifierMock, loggerMock)
+      .exec({
+        allInDirectory: 'path/irrelevant',
+        anonymize: true,
+        projects: [],
+        weeks: 4,
+        slackUrl: 'irrelevant'
+      })
+
+    expect(loggerMock.info).toHaveBeenNthCalledWith(
+      2,
+      '⚠️ There is no git projects to report.'
+    )
   })
 
   it('notify report on slack', async () => {

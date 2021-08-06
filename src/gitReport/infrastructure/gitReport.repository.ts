@@ -11,9 +11,13 @@ export class GitReportRepository {
   constructor (
     @inject(Command) private readonly command: Command,
     @inject(Logger) private readonly logger: Logger
-  ) {}
+  ) {
+  }
 
   async readGitReports (projectsPaths: string[], weeks: number): Promise<GitReportList> {
+    if (projectsPaths.length === 0) {
+      return new GitReportList([])
+    }
     const reports = [] as GitReport[]
     for await (const report of this.readGitReportsGenerator(projectsPaths, weeks)) {
       reports.push(report)
@@ -24,6 +28,9 @@ export class GitReportRepository {
   async readGitProjects (directoryPath: string): Promise<string[]> {
     const absolutePath = path.resolve(directoryPath)
     const list = await this.command.run(`ls -dl ${absolutePath}/*/.git`)
+    if (list.includes('no matches found')) {
+      return []
+    }
     return list.split('\n').map(line =>
       line.split(' ').slice(-1)[0].replace('/.git', '')
     ).filter(Boolean)
@@ -32,10 +39,15 @@ export class GitReportRepository {
   private async * readGitReportsGenerator (projectsPaths: string[], weeks: number): AsyncGenerator<GitReport> {
     let amountOfGitLogRead = 1
     for (const projectPath of projectsPaths) {
-      const gitLog = await this.readGitLog(projectPath, weeks)
-      this.logger.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
-      amountOfGitLogRead += 1
-      yield this.mapToDomain(gitLog, weeks, projectPath)
+      try {
+        const gitLog = await this.readGitLog(projectPath, weeks)
+        this.logger.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
+        amountOfGitLogRead += 1
+        yield this.mapToDomain(gitLog, weeks, projectPath)
+      } catch (e) {
+        this.logger.error(`💥 Error reading git log for ${projectPath}. More info about the error below:`)
+        this.logger.error(e.message)
+      }
     }
   }
 
@@ -55,7 +67,7 @@ export class GitReportRepository {
   }
 
   private extractCommitters (gitLogStats: string[]): CommitterInfo[] {
-    const contributorsCounter = gitLogStats.reduce<Record<string, {stats: string[], totalCommits: number}>>(
+    const contributorsCounter = gitLogStats.reduce<Record<string, { stats: string[], totalCommits: number }>>(
       (contributorsCounter, gitLogStat) => {
         const [contributor, stats] = gitLogStat.split(EOL)
         return {
@@ -66,7 +78,10 @@ export class GitReportRepository {
           }
         }
       }, {})
-    return Object.entries(contributorsCounter).map(([contributor, { totalCommits, stats }]) => ({
+    return Object.entries(contributorsCounter).map(([contributor, {
+      totalCommits,
+      stats
+    }]) => ({
       ...GitReportRepository.extractContributorInfo(contributor),
       ...GitReportRepository.extractStats(stats),
       totalCommits
