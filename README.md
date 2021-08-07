@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/ulisesantana/git-reporter/branch/master/graph/badge.svg?token=6N32FMeuth)](https://codecov.io/gh/ulisesantana/git-reporter)
 
 A command line tool for contribution reporting on git projects. The 
-committers will be sorted based on contributions, taking into account  
+committers will be sorted based on contributions, taking into account 
 commits, files changed, insertions and deletions.
 
 ```shell
