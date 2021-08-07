@@ -113,7 +113,7 @@ describe('Git Reporter Controller should', () => {
 
     expect(loggerMock.info).toHaveBeenNthCalledWith(
       2,
-      '⚠️ There is no git projects to report.'
+      '⚠️  There is no git projects to report.'
     )
   })
 

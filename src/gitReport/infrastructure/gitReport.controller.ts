@@ -86,7 +86,7 @@ export class GitReportController {
 
   private static generateReportOutput (report: GitReport): string {
     if (report.projects.length === 0) {
-      return '⚠️ There is no git projects to report.'
+      return '⚠️  There is no git projects to report.'
     }
     return `
 Report for: 
