@@ -109,5 +109,40 @@ describe('Git Report should', () => {
     expect(report.committers[1].name).not.toBe(committers[1].name)
   })
 
-  it.todo('sort committers by total commits, insertions, deletions and files changed')
+  it('sort committers by total commits, insertions, deletions and files changed', () => {
+    const committers = [
+      buildCommitterInfo({ name: 'Robin', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 }),
+      buildCommitterInfo({ name: 'Batman', totalCommits: 1, totalInsertions: 13, totalDeletions: 41, totalFilesChanged: 20 }),
+      buildCommitterInfo({ name: 'Nightwing', totalCommits: 5, totalInsertions: 30, totalDeletions: 4, totalFilesChanged: 2 })
+    ]
+
+    const report = new GitReport({
+      weeks: 4,
+      projects: [],
+      committers
+    })
+
+    expect(report.committers[0].name).toBe('Batman')
+    expect(report.committers[1].name).toBe('Nightwing')
+    expect(report.committers[2].name).toBe('Robin')
+  })
+  it('sort committers by name if they have done the same contributions', () => {
+    const committers = [
+      buildCommitterInfo({ name: 'Robin', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 }),
+      buildCommitterInfo({ name: 'Alfred', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 }),
+      buildCommitterInfo({ name: 'Batman', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 }),
+      buildCommitterInfo({ name: 'Nightwing', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 })
+    ]
+
+    const report = new GitReport({
+      weeks: 4,
+      projects: [],
+      committers
+    })
+
+    expect(report.committers[0].name).toBe('Alfred')
+    expect(report.committers[1].name).toBe('Batman')
+    expect(report.committers[2].name).toBe('Nightwing')
+    expect(report.committers[3].name).toBe('Robin')
+  })
 })

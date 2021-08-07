@@ -57,7 +57,7 @@ export class GitReport {
 
   private static sortCommittersByTotalCommitsDesc (committers: CommitterInfo[]): CommitterInfo[] {
     return [...committers].sort((a, b) => {
-      return b.totalCommits - a.totalCommits || a.name.localeCompare(b.name)
+      return GitReport.computeContributionScore(b) - GitReport.computeContributionScore(a) || a.name.localeCompare(b.name)
     })
   }
 
@@ -73,5 +73,9 @@ export class GitReport {
       totalFilesChanged: 0,
       totalInsertions: 0
     })
+  }
+
+  private static computeContributionScore ({ totalCommits, totalFilesChanged, totalInsertions, totalDeletions }: CommitterInfo): number {
+    return totalCommits + totalFilesChanged + totalInsertions + totalDeletions
   }
 }

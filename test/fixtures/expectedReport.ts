@@ -12,65 +12,65 @@ export const expectedReport: GitReport = {
       email: 'rtrott@gmail.com',
       name: 'Rich Trott',
       totalCommits: 6,
+      totalDeletions: 15,
       totalFilesChanged: 16,
-      totalInsertions: 84,
-      totalDeletions: 15
-    },
-    {
-      email: 'duhamelantoine1995@gmail.com',
-      name: 'Antoine du Hamel',
-      totalCommits: 1,
-      totalFilesChanged: 1,
-      totalInsertions: 2,
-      totalDeletions: 2
-    },
-    {
-      email: 'arnold.zokas@coderoom.net',
-      name: 'Arnold Zokas',
-      totalCommits: 1,
-      totalFilesChanged: 1,
-      totalInsertions: 12,
-      totalDeletions: 0
-    },
-    {
-      email: 'jasnell@gmail.com',
-      name: 'James M Snell',
-      totalCommits: 1,
-      totalFilesChanged: 2,
-      totalInsertions: 23,
-      totalDeletions: 1
+      totalInsertions: 84
     },
     {
       email: 'luigipinca@gmail.com',
       name: 'Luigi Pinca',
       totalCommits: 1,
+      totalDeletions: 20,
       totalFilesChanged: 2,
-      totalInsertions: 24,
-      totalDeletions: 20
+      totalInsertions: 24
     },
     {
-      email: 'rafael.nunu@hotmail.com',
-      name: 'Rafael Gonzaga',
+      email: 'jasnell@gmail.com',
+      name: 'James M Snell',
       totalCommits: 1,
+      totalDeletions: 1,
+      totalFilesChanged: 2,
+      totalInsertions: 23
+    },
+    {
+      email: 'arnold.zokas@coderoom.net',
+      name: 'Arnold Zokas',
+      totalCommits: 1,
+      totalDeletions: 0,
       totalFilesChanged: 1,
-      totalInsertions: 1,
-      totalDeletions: 0
+      totalInsertions: 12
     },
     {
       email: 'rod@vagg.org',
       name: 'Rod Vagg',
       totalCommits: 1,
+      totalDeletions: 0,
       totalFilesChanged: 1,
-      totalInsertions: 11,
-      totalDeletions: 0
+      totalInsertions: 11
+    },
+    {
+      email: 'duhamelantoine1995@gmail.com',
+      name: 'Antoine du Hamel',
+      totalCommits: 1,
+      totalDeletions: 2,
+      totalFilesChanged: 1,
+      totalInsertions: 2
     },
     {
       email: 'sgallagh@redhat.com',
       name: 'Stephen Gallagher',
       totalCommits: 1,
+      totalDeletions: 1,
       totalFilesChanged: 1,
-      totalInsertions: 1,
-      totalDeletions: 1
+      totalInsertions: 1
+    },
+    {
+      email: 'rafael.nunu@hotmail.com',
+      name: 'Rafael Gonzaga',
+      totalCommits: 1,
+      totalDeletions: 0,
+      totalFilesChanged: 1,
+      totalInsertions: 1
     }
   ]
 } as GitReport
@@ -105,17 +105,11 @@ Contributions by author:
       Insertions: 84
       Deletions: 15
 
-    Antoine du Hamel (duhamelantoine1995@gmail.com):
+    Luigi Pinca (luigipinca@gmail.com):
       Commits: 1
-      Files changed: 1
-      Insertions: 2
-      Deletions: 2
-
-    Arnold Zokas (arnold.zokas@coderoom.net):
-      Commits: 1
-      Files changed: 1
-      Insertions: 12
-      Deletions: 0
+      Files changed: 2
+      Insertions: 24
+      Deletions: 20
 
     James M Snell (jasnell@gmail.com):
       Commits: 1
@@ -123,16 +117,10 @@ Contributions by author:
       Insertions: 23
       Deletions: 1
 
-    Luigi Pinca (luigipinca@gmail.com):
-      Commits: 1
-      Files changed: 2
-      Insertions: 24
-      Deletions: 20
-
-    Rafael Gonzaga (rafael.nunu@hotmail.com):
+    Arnold Zokas (arnold.zokas@coderoom.net):
       Commits: 1
       Files changed: 1
-      Insertions: 1
+      Insertions: 12
       Deletions: 0
 
     Rod Vagg (rod@vagg.org):
@@ -141,9 +129,21 @@ Contributions by author:
       Insertions: 11
       Deletions: 0
 
+    Antoine du Hamel (duhamelantoine1995@gmail.com):
+      Commits: 1
+      Files changed: 1
+      Insertions: 2
+      Deletions: 2
+
     Stephen Gallagher (sgallagh@redhat.com):
       Commits: 1
       Files changed: 1
       Insertions: 1
       Deletions: 1
+
+    Rafael Gonzaga (rafael.nunu@hotmail.com):
+      Commits: 1
+      Files changed: 1
+      Insertions: 1
+      Deletions: 0
 `
