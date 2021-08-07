@@ -1,10 +1,10 @@
-import { expectedReportOutput, rawGitLog } from '../fixtures'
+import { expectedReportOutput, rawGitLog } from '../../../fixtures'
 import { container } from 'tsyringe'
-import { Notifier } from '../../src/notifier'
-import { GitReportController } from '../../src/gitReport/infrastructure/gitReport.controller'
-import { Logger } from '../../src/logger'
-import { GitReportRepository } from '../../src/gitReport/infrastructure/gitReport.repository'
-import { Command } from '../../src/command'
+import { Notifier } from '../../../../src/notifier'
+import { GitReportController } from '../../../../src/gitReport/infrastructure/gitReport.controller'
+import { Logger } from '../../../../src/logger'
+import { GitReportRepository } from '../../../../src/gitReport/infrastructure/gitReport.repository'
+import { Command } from '../../../../src/command'
 
 describe('Git Reporter Controller should', () => {
   let gitReporterRepository: GitReportRepository

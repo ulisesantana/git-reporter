@@ -1,11 +1,11 @@
-import { expectedReport, rawGitLog } from '../fixtures'
-import { GitReportRepository } from '../../src/gitReport/infrastructure/gitReport.repository'
-import { Logger } from '../../src/logger'
+import { expectedReport, rawGitLog } from '../../../../fixtures'
+import { GitReportRepository } from '../../../../../src/gitReport/infrastructure/gitReport.repository'
+import { Logger } from '../../../../../src/logger'
 import { container } from 'tsyringe'
-import { Command } from '../../src/command'
-import { GenerateReportForProjectsInDirectoryUseCase } from '../../src/gitReport/domain/cases/generateReportForProjectsInDirectory'
+import { Command } from '../../../../../src/command'
+import { GenerateReportForProjectsInDirectoryUseCase } from '../../../../../src/gitReport/domain/cases/generateReportForProjectsInDirectory'
 
-describe('generate a git report reading all git projects in a directory', () => {
+describe('Generate a git report reading all git projects in a directory use case', () => {
   let gitReporterRepository: GitReportRepository
   let loggerMock: Logger
 
@@ -22,7 +22,7 @@ describe('generate a git report reading all git projects in a directory', () => 
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
-  it('successfully', async () => {
+  it('generates a report successfully', async () => {
     const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
       .exec({
         directoryPath: 'path/irrelevant',
@@ -38,7 +38,7 @@ describe('generate a git report reading all git projects in a directory', () => 
     expect(report.totalDeletions).toStrictEqual(expectedReport.totalDeletions)
   })
 
-  it('returning an empty report if no project paths are given', async () => {
+  it('generates an empty report if no project paths are given', async () => {
     gitReporterRepository.readGitProjects = jest.fn(async () => [])
 
     const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)

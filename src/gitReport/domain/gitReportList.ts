@@ -4,13 +4,13 @@ import { CommitterInfo, GitReport } from './gitReport'
  * Inmutable list of git reports
  */
 export class GitReportList {
-  constructor (private values: GitReport[]) {}
-
   private static readonly emptyGitReport = new GitReport({
     committers: [],
     projects: [],
     weeks: 0
   })
+
+  constructor (private values: GitReport[]) {}
 
   mergeReports (): GitReport {
     return this.values.reduce<GitReport>(

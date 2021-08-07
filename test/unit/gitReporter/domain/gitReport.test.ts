@@ -1,5 +1,5 @@
-import { GitReport } from '../../src/gitReport/domain/gitReport'
-import { buildCommitterInfo } from '../builders'
+import { GitReport } from '../../../../src/gitReport/domain/gitReport'
+import { buildCommitterInfo } from '../../../builders'
 
 describe('Git Report should', () => {
   it('retrieve total commits between all committers', async () => {

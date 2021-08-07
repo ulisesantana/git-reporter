@@ -1,11 +1,11 @@
-import { expectedReport, expectedReportForMultipleRepositories, rawGitLog } from '../fixtures'
-import { GitReportRepository } from '../../src/gitReport/infrastructure/gitReport.repository'
-import { Logger } from '../../src/logger'
+import { expectedReport, expectedReportForMultipleRepositories, rawGitLog } from '../../../../fixtures'
+import { GitReportRepository } from '../../../../../src/gitReport/infrastructure/gitReport.repository'
+import { Logger } from '../../../../../src/logger'
 import { container } from 'tsyringe'
-import { Command } from '../../src/command'
-import { GenerateReportUseCase } from '../../src/gitReport/domain/cases/generateReport'
+import { Command } from '../../../../../src/command'
+import { GenerateReportUseCase } from '../../../../../src/gitReport/domain/cases/generateReport'
 
-describe('generate a git report based on project paths', () => {
+describe('Generate a git report based on project paths use case', () => {
   let gitReporterRepository: GitReportRepository
   let loggerMock: Logger
 
@@ -22,7 +22,7 @@ describe('generate a git report based on project paths', () => {
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
-  it('processing a single repository', async () => {
+  it('generates a report from a single repository', async () => {
     const report = await new GenerateReportUseCase(gitReporterRepository)
       .exec({
         projectsPaths: ['path/irrelevant'],
@@ -38,7 +38,7 @@ describe('generate a git report based on project paths', () => {
     expect(report.totalDeletions).toStrictEqual(expectedReport.totalDeletions)
   })
 
-  it('processing multiple repositories', async () => {
+  it('generates a report from multiple repositories', async () => {
     const report = await new GenerateReportUseCase(gitReporterRepository)
       .exec({
         projectsPaths: [
@@ -57,7 +57,7 @@ describe('generate a git report based on project paths', () => {
     expect(report.totalDeletions).toStrictEqual(expectedReportForMultipleRepositories.totalDeletions)
   })
 
-  it('returning an empty report if no project paths are given', async () => {
+  it('generates an empty report if no project paths are given', async () => {
     const report = await new GenerateReportUseCase(gitReporterRepository)
       .exec({
         projectsPaths: [],
