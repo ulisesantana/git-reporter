@@ -37,7 +37,9 @@ describe('Git Report Repository should', () => {
     const reports = await repository.readGitReports([projectPath, projectPath], weeks)
 
     expect(reports).toEqual(expectedReports)
-    expect(logger.error).toHaveBeenCalledWith('💥 Error reading git log for irrelevant. More info about the error below:')
+    expect(logger.error).toHaveBeenCalledWith('(1/2) 💥 Error reading git log for irrelevant. More info about the error below:')
+    expect(logger.error).toHaveBeenCalledWith('(2/2) 💥 Error reading git log for irrelevant. More info about the' +
+      ' error below:')
     expect(logger.error).toHaveBeenCalledWith('Command failed')
   })
 

@@ -42,11 +42,12 @@ export class GitReportRepository {
       try {
         const gitLog = await this.readGitLog(projectPath, weeks)
         this.logger.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
-        amountOfGitLogRead += 1
         yield this.mapToDomain(gitLog, weeks, projectPath)
       } catch (e) {
-        this.logger.error(`💥 Error reading git log for ${projectPath}. More info about the error below:`)
+        this.logger.error(`(${amountOfGitLogRead}/${projectsPaths.length}) 💥 Error reading git log for ${projectPath}. More info about the error below:`)
         this.logger.error(e.message)
+      } finally {
+        amountOfGitLogRead += 1
       }
     }
   }
