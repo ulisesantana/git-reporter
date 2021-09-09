@@ -1,7 +1,7 @@
 import { expectedProjects, expectedReport, rawGitLog, rawProjectList } from '@test/fixtures'
 import { GitReportList } from '@gitReport/domain/gitReportList'
 import { Command } from '@core/infrastructure/command'
-import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { GitReportCommandRepository } from '@gitReport/infrastructure/gitReport.command.repository'
 import { Logger } from '@core/infrastructure/logger'
 
 describe('Git Report Repository should', () => {
@@ -15,7 +15,7 @@ describe('Git Report Repository should', () => {
     const weeks = 4
     const command = new Command()
     command.run = async () => rawGitLog
-    const repository = new GitReportRepository(command, logger)
+    const repository = new GitReportCommandRepository(command, logger)
 
     const reports = await repository.readGitReports([projectPath, projectPath], weeks)
 
@@ -32,7 +32,7 @@ describe('Git Report Repository should', () => {
     command.run = async () => {
       throw new Error('Command failed')
     }
-    const repository = new GitReportRepository(command, logger)
+    const repository = new GitReportCommandRepository(command, logger)
 
     const reports = await repository.readGitReports([projectPath, projectPath], weeks)
 
@@ -47,7 +47,7 @@ describe('Git Report Repository should', () => {
     const projectPath = 'irrelevant'
     const command = new Command()
     command.run = async () => rawProjectList
-    const repository = new GitReportRepository(command, logger)
+    const repository = new GitReportCommandRepository(command, logger)
 
     const projects = await repository.readGitProjects(projectPath)
 
@@ -58,7 +58,7 @@ describe('Git Report Repository should', () => {
     const projectPath = 'irrelevant'
     const command = new Command()
     command.run = async () => '\nzsh: no matches found: /*/.git'
-    const repository = new GitReportRepository(command, logger)
+    const repository = new GitReportCommandRepository(command, logger)
 
     const projects = await repository.readGitProjects(projectPath)
 

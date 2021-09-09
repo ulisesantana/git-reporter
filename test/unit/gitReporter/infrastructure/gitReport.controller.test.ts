@@ -1,13 +1,13 @@
 import { container } from 'tsyringe'
 import { expectedReportOutput, rawGitLog } from '@test/fixtures'
 import { Command } from '@core/infrastructure/command'
-import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { GitReportCommandRepository } from '@gitReport/infrastructure/gitReport.command.repository'
 import { Logger } from '@core/infrastructure/logger'
 import { GitReportController } from '@gitReport/infrastructure/gitReport.controller'
 import { Notifier } from '@core/infrastructure/notifier'
 
 describe('Git Reporter Controller should', () => {
-  let gitReporterRepository: GitReportRepository
+  let gitReporterRepository: GitReportCommandRepository
   let notifierMock: Notifier
   let loggerMock: Logger
 
@@ -17,9 +17,9 @@ describe('Git Reporter Controller should', () => {
     commandMock.run = async () => rawGitLog
     container.registerInstance(Command, commandMock)
 
-    gitReporterRepository = container.resolve(GitReportRepository)
+    gitReporterRepository = container.resolve(GitReportCommandRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
-    container.registerInstance(GitReportRepository, gitReporterRepository)
+    container.registerInstance(GitReportCommandRepository, gitReporterRepository)
 
     notifierMock = container.resolve(Notifier)
     notifierMock.publishOnSlack = jest.fn(async () => {})

@@ -41,7 +41,7 @@ describe('Logger should', () => {
 
 function testLog () {
   require('reflect-metadata')
-  const { Logger } = require('./build/logger')
+  const { Logger } = require('./build/core/infrastructure/logger')
 
   const log = new Logger()
 

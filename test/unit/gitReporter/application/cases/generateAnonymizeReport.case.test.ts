@@ -2,11 +2,11 @@ import { container } from 'tsyringe'
 import { expectedReport, rawGitLog } from '@test/fixtures'
 import { GenerateAnonymizeReportUseCase } from '@gitReport/application/cases/generateAnonymizeReport.case'
 import { Command } from '@core/infrastructure/command'
-import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { GitReportCommandRepository } from '@gitReport/infrastructure/gitReport.command.repository'
 import { Logger } from '@core/infrastructure/logger'
 
 describe('Generate an anonymize git report based on project paths use case', () => {
-  let gitReporterRepository: GitReportRepository
+  let gitReporterRepository: GitReportCommandRepository
 
   beforeEach(() => {
     container.clearInstances()
@@ -17,7 +17,7 @@ describe('Generate an anonymize git report based on project paths use case', () 
     loggerMock.info = jest.fn()
     loggerMock.error = jest.fn()
     container.registerInstance(Logger, loggerMock)
-    gitReporterRepository = container.resolve(GitReportRepository)
+    gitReporterRepository = container.resolve(GitReportCommandRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 

@@ -6,14 +6,14 @@ import { GitReportList } from '@gitReport/domain/gitReportList'
 import { Logger } from '@core/infrastructure/logger'
 import { CommitterInfo, GitReport } from '@gitReport/domain/gitReport'
 import { handleError } from '@core/domain/error'
+import { GitReportRepository } from '@gitReport/domain/gitReport.repository'
 
 @injectable()
-export class GitReportRepository {
+export class GitReportCommandRepository implements GitReportRepository {
   constructor (
     @inject(Command) private readonly command: Command,
     @inject(Logger) private readonly logger: Logger
-  ) {
-  }
+  ) {}
 
   async readGitReports (projectsPaths: string[], weeks: number): Promise<GitReportList> {
     if (projectsPaths.length === 0) {
@@ -57,7 +57,7 @@ export class GitReportRepository {
     const contributors = gitLog.split(EOL.concat(EOL)).filter(Boolean)
     return new GitReport({
       weeks,
-      projects: [GitReportRepository.extractProjectName(projectPath)],
+      projects: [GitReportCommandRepository.extractProjectName(projectPath)],
       committers: this.extractCommitters(contributors)
     })
   }
@@ -84,8 +84,8 @@ export class GitReportRepository {
       totalCommits,
       stats
     }]) => ({
-      ...GitReportRepository.extractContributorInfo(contributor),
-      ...GitReportRepository.extractStats(stats),
+      ...GitReportCommandRepository.extractContributorInfo(contributor),
+      ...GitReportCommandRepository.extractStats(stats),
       totalCommits
     }))
   }
@@ -100,9 +100,9 @@ export class GitReportRepository {
 
   private static extractStats (stats: string[]): Pick<CommitterInfo, 'totalFilesChanged' | 'totalInsertions' | 'totalDeletions'> {
     return stats.reduce((acc, stat) => {
-      const filesChanged = GitReportRepository.parseStat(/\d* files? changed/, stat)
-      const insertions = GitReportRepository.parseStat(/\d* insertions?/, stat)
-      const deletions = GitReportRepository.parseStat(/\d* deletions?/, stat)
+      const filesChanged = GitReportCommandRepository.parseStat(/\d* files? changed/, stat)
+      const insertions = GitReportCommandRepository.parseStat(/\d* insertions?/, stat)
+      const deletions = GitReportCommandRepository.parseStat(/\d* deletions?/, stat)
       return {
         totalFilesChanged: filesChanged + acc.totalFilesChanged,
         totalInsertions: insertions + acc.totalInsertions,

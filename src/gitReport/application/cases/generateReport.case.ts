@@ -1,7 +1,8 @@
 import { inject, injectable } from 'tsyringe'
-import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { GitReportRepository } from '@gitReport/domain/gitReport.repository'
 import { UseCase } from '@core/domain/useCase'
 import { GitReport } from '@gitReport/domain/gitReport'
+import { GitReportCommandRepository } from '@gitReport/infrastructure/gitReport.command.repository'
 
 export interface GenerateReportInput {
   /**
@@ -16,7 +17,7 @@ export interface GenerateReportInput {
 
 @injectable()
 export class GenerateReportUseCase implements UseCase<GenerateReportInput, Promise<GitReport>> {
-  constructor (@inject(GitReportRepository) private repository: GitReportRepository) {}
+  constructor (@inject(GitReportCommandRepository) private repository: GitReportRepository) {}
 
   async exec ({ projectsPaths, weeks }: GenerateReportInput): Promise<GitReport> {
     const reports = await this.repository.readGitReports(projectsPaths, weeks)

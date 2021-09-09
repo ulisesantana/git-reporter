@@ -2,11 +2,11 @@ import { container } from 'tsyringe'
 import { expectedReport, rawGitLog } from '@test/fixtures'
 import { Command } from '@core/infrastructure/command'
 import { Logger } from '@core/infrastructure/logger'
-import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { GitReportCommandRepository } from '@gitReport/infrastructure/gitReport.command.repository'
 import { GenerateReportForProjectsInDirectoryUseCase } from '@gitReport/application/cases/generateReportForProjectsInDirectory.case'
 
 describe('Generate a git report reading all git projects in a directory use case', () => {
-  let gitReporterRepository: GitReportRepository
+  let gitReporterRepository: GitReportCommandRepository
   let loggerMock: Logger
 
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('Generate a git report reading all git projects in a directory use case
     loggerMock.info = jest.fn()
     loggerMock.error = jest.fn()
     container.registerInstance(Logger, loggerMock)
-    gitReporterRepository = container.resolve(GitReportRepository)
+    gitReporterRepository = container.resolve(GitReportCommandRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
