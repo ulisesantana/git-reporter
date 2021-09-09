@@ -1,8 +1,8 @@
-import { UseCase } from '../../../useCase'
 import { inject, injectable } from 'tsyringe'
-import { GitReportRepository } from '../../infrastructure/gitReport.repository'
-import { GitReport } from '../gitReport'
-import { GenerateReportUseCase } from './generateReport'
+import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { UseCase } from '@core/domain/useCase'
+import { GenerateReportUseCase } from '@gitReport/application/cases/generateReport.case'
+import { GitReport } from '@gitReport/domain/gitReport'
 
 export interface GenerateReportForProjectsInDirectoryInput {
   /**

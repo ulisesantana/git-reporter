@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
-import { GitReportRepository } from '../../infrastructure/gitReport.repository'
-import { UseCase } from '../../../useCase'
-import { GitReport } from '../gitReport'
+import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { UseCase } from '@core/domain/useCase'
+import { GitReport } from '@gitReport/domain/gitReport'
 
 export interface GenerateReportInput {
   /**

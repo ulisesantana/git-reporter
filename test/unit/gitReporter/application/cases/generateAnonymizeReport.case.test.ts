@@ -1,9 +1,9 @@
-import { expectedReport, rawGitLog } from '../../../../fixtures'
-import { GitReportRepository } from '../../../../../src/gitReport/infrastructure/gitReport.repository'
-import { Logger } from '../../../../../src/logger'
 import { container } from 'tsyringe'
-import { Command } from '../../../../../src/command'
-import { GenerateAnonymizeReportUseCase } from '../../../../../src/gitReport/domain/cases/generateAnonymizeReport'
+import { expectedReport, rawGitLog } from '@test/fixtures'
+import { GenerateAnonymizeReportUseCase } from '@gitReport/application/cases/generateAnonymizeReport.case'
+import { Command } from '@core/infrastructure/command'
+import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { Logger } from '@core/infrastructure/logger'
 
 describe('Generate an anonymize git report based on project paths use case', () => {
   let gitReporterRepository: GitReportRepository

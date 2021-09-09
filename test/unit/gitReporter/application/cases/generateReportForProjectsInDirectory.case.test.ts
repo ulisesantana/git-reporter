@@ -1,9 +1,9 @@
-import { expectedReport, rawGitLog } from '../../../../fixtures'
-import { GitReportRepository } from '../../../../../src/gitReport/infrastructure/gitReport.repository'
-import { Logger } from '../../../../../src/logger'
 import { container } from 'tsyringe'
-import { Command } from '../../../../../src/command'
-import { GenerateReportForProjectsInDirectoryUseCase } from '../../../../../src/gitReport/domain/cases/generateReportForProjectsInDirectory'
+import { expectedReport, rawGitLog } from '@test/fixtures'
+import { Command } from '@core/infrastructure/command'
+import { Logger } from '@core/infrastructure/logger'
+import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
+import { GenerateReportForProjectsInDirectoryUseCase } from '@gitReport/application/cases/generateReportForProjectsInDirectory.case'
 
 describe('Generate a git report reading all git projects in a directory use case', () => {
   let gitReporterRepository: GitReportRepository

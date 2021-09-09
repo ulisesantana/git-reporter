@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe'
-import { Command } from '../../command'
 import path from 'path'
-import { Logger } from '../../logger'
-import { CommitterInfo, GitReport } from '../domain/gitReport'
 import { EOL } from 'os'
-import { GitReportList } from '../domain/gitReportList'
+import { Command } from '@core/infrastructure/command'
+import { GitReportList } from '@gitReport/domain/gitReportList'
+import { Logger } from '@core/infrastructure/logger'
+import { CommitterInfo, GitReport } from '@gitReport/domain/gitReport'
 
 @injectable()
 export class GitReportRepository {

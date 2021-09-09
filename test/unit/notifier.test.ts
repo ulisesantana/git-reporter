@@ -1,7 +1,7 @@
-import { Notifier } from '../../src/notifier'
 import { container } from 'tsyringe'
-import { Logger } from '../../src/logger'
 import { request } from 'undici'
+import { Logger } from '@core/infrastructure/logger'
+import { Notifier } from '@core/infrastructure/notifier'
 
 jest.mock('undici', () => ({
   ...(jest.requireActual<any>('undici')),

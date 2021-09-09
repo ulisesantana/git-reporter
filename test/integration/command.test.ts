@@ -1,4 +1,4 @@
-import { Command } from '../../src/command'
+import { Command } from '@core/infrastructure/command'
 import { container } from 'tsyringe'
 
 describe('Command should', () => {

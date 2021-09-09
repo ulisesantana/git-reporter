@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe'
-import { GitReportRepository } from '../../infrastructure/gitReport.repository'
-import { UseCase } from '../../../useCase'
-import { GitReport } from '../gitReport'
-import { GenerateReportInput, GenerateReportUseCase } from './generateReport'
+import { UseCase } from '@core/domain/useCase'
+import { GenerateReportInput, GenerateReportUseCase } from '@gitReport/application/cases/generateReport.case'
+import { GitReport } from '@gitReport/domain/gitReport'
+import { GitReportRepository } from '@gitReport/infrastructure/gitReport.repository'
 
 @injectable()
 export class GenerateAnonymizeReportUseCase implements UseCase<GenerateReportInput, Promise<GitReport>> {

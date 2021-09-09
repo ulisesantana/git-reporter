@@ -1,3 +1,3 @@
 export * from './expectedReport'
-export * from './rawGitLog'
-export * from './rawProjectList'
+export * from './gitLog.raw'
+export * from './projectList.raw'
