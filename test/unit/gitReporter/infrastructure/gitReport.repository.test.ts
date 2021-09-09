@@ -40,7 +40,7 @@ describe('Git Report Repository should', () => {
     expect(logger.error).toHaveBeenCalledWith('(1/2) 💥 Error reading git log for irrelevant. More info about the error below:')
     expect(logger.error).toHaveBeenCalledWith('(2/2) 💥 Error reading git log for irrelevant. More info about the' +
       ' error below:')
-    expect(logger.error).toHaveBeenCalledWith('Command failed')
+    expect(logger.error).toHaveBeenCalledWith('Error: Command failed')
   })
 
   it('retrieve a list of git projects paths', async () => {

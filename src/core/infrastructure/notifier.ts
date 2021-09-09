@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe'
 import { request } from 'undici'
 import { RequestOptions } from 'undici/types/client'
 import { Logger } from './logger'
+import { handleError } from '@core/domain/error'
 
 @injectable()
 export class Notifier {
@@ -15,7 +16,7 @@ export class Notifier {
       } as RequestOptions)
     } catch (err) {
       this.logger.error('Error publishing on Slack')
-      this.logger.error(err.toString())
+      handleError(err, this.logger.error)
     }
   }
 }

@@ -5,6 +5,7 @@ import { Command } from '@core/infrastructure/command'
 import { GitReportList } from '@gitReport/domain/gitReportList'
 import { Logger } from '@core/infrastructure/logger'
 import { CommitterInfo, GitReport } from '@gitReport/domain/gitReport'
+import { handleError } from '@core/domain/error'
 
 @injectable()
 export class GitReportRepository {
@@ -43,9 +44,9 @@ export class GitReportRepository {
         const gitLog = await this.readGitLog(projectPath, weeks)
         this.logger.info(`(${amountOfGitLogRead}/${projectsPaths.length}) Read git log for ${projectPath}`)
         yield this.mapToDomain(gitLog, weeks, projectPath)
-      } catch (e) {
+      } catch (err) {
         this.logger.error(`(${amountOfGitLogRead}/${projectsPaths.length}) 💥 Error reading git log for ${projectPath}. More info about the error below:`)
-        this.logger.error(e.message)
+        handleError(err, this.logger.error)
       } finally {
         amountOfGitLogRead += 1
       }
@@ -117,8 +118,10 @@ export class GitReportRepository {
   private static parseStat (regExp: RegExp, stat: string): number {
     const extractedStat = regExp.exec(stat)
     if (extractedStat) {
-      const [value] = /\d*/.exec(extractedStat[0])
-      return Number(value)
+      const stat = /\d*/.exec(extractedStat[0])
+      return stat !== null
+        ? Number(stat[0])
+        : 0
     }
     return 0
   }
