@@ -3,7 +3,7 @@ import { container } from 'tsyringe'
 
 describe('Command should', () => {
   it('run an unix command and show its output', async () => {
-    const result = await container.resolve(Command).run('ls ./test/integration')
+    const result = await container.resolve(Command).run('ls ./test/integration/core/infrastructure')
     expect(result).toContain('command.test.ts')
   })
 })

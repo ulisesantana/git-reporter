@@ -4,7 +4,7 @@ import { GitReportCommandRepository } from '@gitReport/infrastructure/gitReport.
 import { UseCase } from '@core/domain/useCase'
 import { GenerateReportForProjectsInDirectoryInput } from '@gitReport/application/cases/generateReportForProjectsInDirectory.case'
 import { GitReport } from '@gitReport/domain/gitReport'
-import { GitReportRepository } from '@gitReport/domain/gitReport.repository'
+import { GitReportRepository } from '@gitReport/application/gitReport.repository'
 
 @injectable()
 export class GenerateAnonymizeReportForProjectsInDirectoryUseCase

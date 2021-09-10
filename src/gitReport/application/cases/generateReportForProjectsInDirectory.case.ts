@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe'
-import { GitReportRepository } from '@gitReport/domain/gitReport.repository'
+import { GitReportRepository } from '@gitReport/application/gitReport.repository'
 import { UseCase } from '@core/domain/useCase'
 import { GenerateReportUseCase } from '@gitReport/application/cases/generateReport.case'
 import { GitReport } from '@gitReport/domain/gitReport'
