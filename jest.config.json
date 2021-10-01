@@ -13,10 +13,5 @@
   "coveragePathIgnorePatterns": [
     "test/fixtures",
     "test/builders"
-  ],
-  "moduleNameMapper": {
-    "@gitReport/(.*)": "<rootDir>/src/gitReport/$1",
-    "@core/(.*)": "<rootDir>/src/core/$1",
-    "@test/(.*)": "<rootDir>/test/$1"
-  }
+  ]
 }

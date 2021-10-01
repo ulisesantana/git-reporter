@@ -1,6 +1,6 @@
 import { EOL } from 'os'
 import path from 'path'
-import { CommitterInfo, GitReport } from '@gitReport/domain/gitReport'
+import { CommitterInfo, GitReport } from '../domain/gitReport'
 
 interface ContributorsStats {
   stats: string[],

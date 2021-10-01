@@ -1,6 +1,6 @@
 import util from 'util'
 import { exec as execCallback } from 'child_process'
-import { Logger } from '@core/infrastructure/logger'
+import { Logger } from '../../../../src/core/infrastructure/logger'
 
 const exec = util.promisify(execCallback)
 

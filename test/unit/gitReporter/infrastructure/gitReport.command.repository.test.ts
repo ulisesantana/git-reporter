@@ -1,8 +1,8 @@
-import { expectedProjects, expectedReport, rawGitLog, rawProjectList } from '@test/fixtures'
-import { GitReportList } from '@gitReport/domain/gitReportList'
-import { Command } from '@core/infrastructure/command'
-import { GitReportCommandRepository } from '@gitReport/infrastructure/gitReport.command.repository'
-import { Logger } from '@core/infrastructure/logger'
+import { expectedProjects, expectedReport, rawGitLog, rawProjectList } from '../../../fixtures'
+import { GitReportList } from '../../../../src/gitReport/domain/gitReportList'
+import { Command } from '../../../../src/core/infrastructure/command'
+import { GitReportCommandRepository } from '../../../../src/gitReport/infrastructure/gitReport.command.repository'
+import { Logger } from '../../../../src/core/infrastructure/logger'
 
 describe('Git Report Repository should', () => {
   const logger = new Logger()

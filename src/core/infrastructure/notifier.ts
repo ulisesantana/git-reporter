@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 import { request } from 'undici'
 import { RequestOptions } from 'undici/types/client'
 import { Logger } from './logger'
-import { handleError } from '@core/domain/error'
+import { handleError } from '../domain/error'
 
 @injectable()
 export class Notifier {

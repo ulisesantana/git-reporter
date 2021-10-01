@@ -1,13 +1,13 @@
 import { container, inject, injectable } from 'tsyringe'
 import { EOL } from 'os'
 import path from 'path'
-import { GenerateAnonymizeReportForProjectsInDirectoryUseCase } from '@gitReport/application/cases/generateAnonymizeReportForProjectsInDirectory.case'
-import { GenerateAnonymizeReportUseCase } from '@gitReport/application/cases/generateAnonymizeReport.case'
-import { GenerateReportUseCase } from '@gitReport/application/cases/generateReport.case'
-import { Logger } from '@core/infrastructure/logger'
-import { GitReport } from '@gitReport/domain/gitReport'
-import { GenerateReportForProjectsInDirectoryUseCase } from '@gitReport/application/cases/generateReportForProjectsInDirectory.case'
-import { Notifier } from '@core/infrastructure/notifier'
+import { GenerateAnonymizeReportForProjectsInDirectoryUseCase } from '../application/cases/generateAnonymizeReportForProjectsInDirectory.case'
+import { GenerateAnonymizeReportUseCase } from '../application/cases/generateAnonymizeReport.case'
+import { GenerateReportUseCase } from '../application/cases/generateReport.case'
+import { Logger } from '../../core/infrastructure/logger'
+import { GitReport } from '../domain/gitReport'
+import { GenerateReportForProjectsInDirectoryUseCase } from '../application/cases/generateReportForProjectsInDirectory.case'
+import { Notifier } from '../../core/infrastructure/notifier'
 
 interface GitReporterOptions {
   allInDirectory: string

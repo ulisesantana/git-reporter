@@ -1,4 +1,4 @@
-import { CommitterInfo } from '@gitReport/domain/gitReport'
+import { CommitterInfo } from '../../src/gitReport/domain/gitReport'
 
 export function buildCommitterInfo (committer: Partial<CommitterInfo> = {}): CommitterInfo {
   return {

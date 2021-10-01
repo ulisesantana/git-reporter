@@ -1,12 +1,13 @@
 import { inject, injectable } from 'tsyringe'
 import path from 'path'
-import { Command } from '@core/infrastructure/command'
-import { handleError } from '@core/domain/error'
-import { Logger } from '@core/infrastructure/logger'
-import { GitReportList } from '@gitReport/domain/gitReportList'
-import { GitReport } from '@gitReport/domain/gitReport'
-import { GitReportRepository } from '@gitReport/application/gitReport.repository'
-import { GitReportMapper } from '@gitReport/infrastructure/gitReport.mapper'
+import { Command } from '../../core/infrastructure/command'
+import { handleError } from '../../core/domain/error'
+import { Logger } from '../../core/infrastructure/logger'
+import { GitReportList } from '../domain/gitReportList'
+import { GitReport } from '../domain/gitReport'
+import { GitReportRepository } from '../application/gitReport.repository'
+import { GitReportMapper } from './gitReport.mapper'
+import { EOL } from 'os'
 
 @injectable()
 export class GitReportCommandRepository implements GitReportRepository {
@@ -32,7 +33,7 @@ export class GitReportCommandRepository implements GitReportRepository {
     if (list.includes('no matches found')) {
       return []
     }
-    return list.split('\n').map(line =>
+    return list.split(EOL).map(line =>
       line.split(' ').slice(-1)[0].replace('/.git', '')
     ).filter(Boolean)
   }

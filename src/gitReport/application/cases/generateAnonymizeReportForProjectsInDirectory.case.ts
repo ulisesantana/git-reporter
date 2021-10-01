@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe'
-import { GenerateAnonymizeReportUseCase } from '@gitReport/application/cases/generateAnonymizeReport.case'
-import { GitReportCommandRepository } from '@gitReport/infrastructure/gitReport.command.repository'
-import { UseCase } from '@core/domain/useCase'
-import { GenerateReportForProjectsInDirectoryInput } from '@gitReport/application/cases/generateReportForProjectsInDirectory.case'
-import { GitReport } from '@gitReport/domain/gitReport'
-import { GitReportRepository } from '@gitReport/application/gitReport.repository'
+import { GenerateAnonymizeReportUseCase } from './generateAnonymizeReport.case'
+import { GitReportCommandRepository } from '../../infrastructure/gitReport.command.repository'
+import { UseCase } from '../../../core/domain/useCase'
+import { GenerateReportForProjectsInDirectoryInput } from './generateReportForProjectsInDirectory.case'
+import { GitReport } from '../../domain/gitReport'
+import { GitReportRepository } from '../gitReport.repository'
 
 @injectable()
 export class GenerateAnonymizeReportForProjectsInDirectoryUseCase

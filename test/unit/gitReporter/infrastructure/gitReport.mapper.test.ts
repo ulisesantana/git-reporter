@@ -1,5 +1,5 @@
-import { GitReportMapper } from '@gitReport/infrastructure/gitReport.mapper'
-import { rawGitLog } from '@test/fixtures'
+import { GitReportMapper } from '../../../../src/gitReport/infrastructure/gitReport.mapper'
+import { rawGitLog } from '../../../fixtures'
 
 describe('Git report mapper should', () => {
   describe('map to domain', () => {
