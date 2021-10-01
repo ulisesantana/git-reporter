@@ -1,6 +1,6 @@
 {
   "name": "git-reporter",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "description": "A command line tool for contribution reporting on git projects.",
   "bin": {
     "git-reporter": "bin/gitReport.js"
