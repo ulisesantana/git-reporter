@@ -37,7 +37,7 @@ git-reporter -a projects
 
 Command line options:
 ```shell
-Initializing git reporter 3.0.1
+Initializing git reporter 3.1.0
 
 A command line tool for contribution reporting on git projects. 
 The committers will be sorted based on contributions, taking into account commits, 
