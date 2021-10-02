@@ -3,7 +3,6 @@ import path from 'path'
 import {GenerateAnonymizeReportForProjectsInDirectoryUseCase} from '../application/cases/generate-anonymize-report-for-projects-in-directory.case'
 import {GenerateAnonymizeReportUseCase} from '../application/cases/generate-anonymize-report.case'
 import {GenerateReportUseCase} from '../application/cases/generate-report.case'
-import {GitReport} from '../domain/git-report'
 import {GenerateReportForProjectsInDirectoryUseCase} from '../application/cases/generate-report-for-projects-in-directory.case'
 import {Notifier} from '../../core/infrastructure/notifier'
 import {GitReportPrinter} from './cli/git-report.printer'
@@ -13,6 +12,7 @@ interface GitReporterOptions {
   anonymize: boolean
   projects: string[]
   slackUrl: string
+  verbose: boolean
   weeks: number
 }
 
@@ -27,13 +27,14 @@ export class GitReportController {
     directory,
     anonymize,
     projects,
-    weeks,
     slackUrl,
+    verbose,
+    weeks,
   }: GitReporterOptions): Promise<void> {
     const report = directory ?
       await this.executeReportForDirectory(directory, anonymize, weeks) :
       await this.executeReportForMultipleProjects(projects, anonymize, weeks)
-    await this.printAndNotifyReport(report, slackUrl)
+    await this.printAndNotifyReport(report.toString({verbose}), slackUrl)
   }
 
   private async executeReportForDirectory(allInDirectory: string, anonymize: boolean, weeks: number) {
@@ -63,9 +64,9 @@ export class GitReportController {
       })
   }
 
-  private async printAndNotifyReport(report: GitReport, slackUrl: string) {
-    this.printer.info(report.toString())
-    await this.notifyReport(slackUrl, report.toString())
+  private async printAndNotifyReport(report: string, slackUrl: string) {
+    this.printer.info(report)
+    await this.notifyReport(slackUrl, report)
   }
 
   private async notifyReport(slackUrl: string, reportOutput: string) {

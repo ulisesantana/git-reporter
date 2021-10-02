@@ -12,27 +12,7 @@ commits, files changed, insertions and deletions.
 [![Downloads/week](https://img.shields.io/npm/dw/git-reporter.svg)](https://npmjs.org/package/git-reporter)
 [![License](https://img.shields.io/npm/l/git-reporter.svg)](https://github.com/ulisesantana/git-reporter/blob/master/package.json)
 
-
-
-```shell
-npx git-reporter smarthome -w 12 
-🔍 Starting to fetch git logs for: 
-  - smarthome
-
-PROGRESS | ████████████████████████████████████████ | 1/1 git projects loaded.
-Report for:
-  - smarthome
-
-
-Total commits in the last 12 weeks: 17
-Contributions by author:
-
-    Ulises Santana (ulisesantana@gmail.com):
-      Commits: 17
-      Files changed: 127
-      Insertions: 1337
-      Deletions: 997
-```
+![Usage example](docs/compact-example.png)
 
 ## Usage
 
@@ -57,9 +37,11 @@ git-reporter -a projects
 
 Command line options:
 ```shell
-Initializing git reporter 3.0.0
+Initializing git reporter 3.1.0
 
-A command line tool for contribution reporting on git projects. The committers will be sorted based on contributions, taking into account commits, files changed, insertions and deletions.
+A command line tool for contribution reporting on git projects. 
+The committers will be sorted based on contributions, taking into account commits, 
+files changed, insertions and deletions.
 
 USAGE
   $ git-reporter
@@ -71,7 +53,16 @@ OPTIONS
   -s, --slackUrl=slackUrl    Slack url for publishing report.
   -v, --version              show CLI version
   -w, --weeks=weeks          [default: 4] Number of weeks in the past to look for commits.
+  --verbose                  Set multiline committer contribution info displaying total insertions and 
+                             deletions. Otherwise the committer contribution info is display in one 
+                             line with total commits and total files changed.
 ```
+
+### Verbose mode
+
+Using git-reporter with `--verbose` option will display all the report available info:
+
+![Usage example with verbose option](docs/verbose-example.png)
 
 ## ⚠️ Things to bear in mind
 

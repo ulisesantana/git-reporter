@@ -1,6 +1,6 @@
 {
   "name": "git-reporter",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "A command line tool for contribution reporting on git projects.",
   "bin": {
     "git-reporter": "./bin/run"
@@ -17,9 +17,8 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "npm run build",
-    "prepack": "npm run build && oclif-dev readme",
     "prepublishOnly": "npm run tag",
-    "tag": "npm run update-version && TAG=v$(node -pe \"require('./package.json').version\"); git commit -am \"🔖 $TAG\" && git tag $TAG && npm run docs:update && git push && git push --tags",
+    "tag": "npm run update-version && TAG=v$(node -pe \"require('./package.json').version\"); git commit -am \"🔖 $TAG\" && git tag $TAG && npm run docs:update && git push --tags",
     "update-version": "echo \"export default '$(node -pe \"require('./package.json').version\")'\" > ./src/version.ts",
     "test": "jest --verbose --coverage",
     "version": "oclif-dev readme && git add README.md"

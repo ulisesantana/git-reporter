@@ -1,11 +1,10 @@
 import {container} from 'tsyringe'
-import {expectedReportOutput, rawGitLog} from '../../../fixtures'
+import {expectedReportCompactOutput, expectedReportVerboseOutput, rawGitLog} from '../../../fixtures'
 import {Shell} from '../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {GitReportController} from '../../../../src/git-report/infrastructure/git-report.controller'
 import {Notifier} from '../../../../src/core/infrastructure/notifier'
 import {GitReportPrinter} from '../../../../src/git-report/infrastructure/cli/git-report.printer'
-import {yellow} from 'colorette'
 import {noop} from '../../../noop'
 
 jest.mock('../../../../src/git-report/infrastructure/cli/git-report.printer')
@@ -38,57 +37,122 @@ describe('Git Reporter Controller should', () => {
     container.registerInstance(GitReportPrinter, printerMock)
   })
 
-  it('print report for all the given projects', async () => {
-    await new GitReportController(notifierMock, printerMock)
-    .exec({
-      directory: '',
-      anonymize: false,
-      projects: ['irrelevant'],
-      weeks: 4,
-      slackUrl: 'irrelevant',
+  describe('print compact report', () => {
+    it('print report for all the given projects', async () => {
+      await new GitReportController(notifierMock, printerMock)
+      .exec({
+        directory: '',
+        anonymize: false,
+        projects: ['irrelevant'],
+        verbose: false,
+        weeks: 4,
+        slackUrl: 'irrelevant',
+      })
+
+      expect(printerMock.info).toHaveBeenCalledWith(expectedReportCompactOutput)
     })
 
-    expect(printerMock.info).toHaveBeenCalledWith(expectedReportOutput)
+    it('print anonymized report for all the given projects', async () => {
+      await container.resolve(GitReportController)
+      .exec({
+        directory: '',
+        anonymize: true,
+        projects: ['irrelevant'],
+        verbose: false,
+        weeks: 4,
+        slackUrl: 'irrelevant',
+      })
+
+      expect(printerMock.info).not.toHaveBeenCalledWith(expectedReportCompactOutput)
+    })
+
+    it('print report for all the projects inside the given directory', async () => {
+      await new GitReportController(notifierMock, printerMock)
+      .exec({
+        directory: 'path/irrelevant',
+        anonymize: false,
+        projects: [],
+        verbose: false,
+        weeks: 4,
+        slackUrl: 'irrelevant',
+      })
+
+      expect(printerMock.info).toHaveBeenCalledWith(expectedReportCompactOutput)
+    })
+
+    it('print anonymized report for all the projects inside the given directory', async () => {
+      await new GitReportController(notifierMock, printerMock)
+      .exec({
+        directory: 'path/irrelevant',
+        anonymize: true,
+        projects: [],
+        verbose: false,
+        weeks: 4,
+        slackUrl: 'irrelevant',
+      })
+
+      // TODO: Improve this test
+      expect(printerMock.info).not.toHaveBeenCalledWith(expectedReportCompactOutput)
+    })
   })
 
-  it('print anonymized report for all the given projects', async () => {
-    await container.resolve(GitReportController)
-    .exec({
-      directory: '',
-      anonymize: true,
-      projects: ['irrelevant'],
-      weeks: 4,
-      slackUrl: 'irrelevant',
+  describe('print verbose report', () => {
+    it('print report for all the given projects', async () => {
+      await new GitReportController(notifierMock, printerMock)
+      .exec({
+        directory: '',
+        anonymize: false,
+        projects: ['irrelevant'],
+        verbose: true,
+        weeks: 4,
+        slackUrl: 'irrelevant',
+      })
+
+      expect(printerMock.info).toHaveBeenCalledWith(expectedReportVerboseOutput)
     })
 
-    expect(printerMock.info).not.toHaveBeenCalledWith(expectedReportOutput)
-  })
+    it('print anonymized report for all the given projects', async () => {
+      await container.resolve(GitReportController)
+      .exec({
+        directory: '',
+        anonymize: true,
+        projects: ['irrelevant'],
+        verbose: true,
+        weeks: 4,
+        slackUrl: 'irrelevant',
+      })
 
-  it('print report for all the projects inside the given directory', async () => {
-    await new GitReportController(notifierMock, printerMock)
-    .exec({
-      directory: 'path/irrelevant',
-      anonymize: false,
-      projects: [],
-      weeks: 4,
-      slackUrl: 'irrelevant',
+      expect(printerMock.info).not.toHaveBeenCalledWith(expectedReportVerboseOutput)
     })
 
-    expect(printerMock.info).toHaveBeenCalledWith(expectedReportOutput)
-  })
+    it('print report for all the projects inside the given directory', async () => {
+      await new GitReportController(notifierMock, printerMock)
+      .exec({
+        directory: 'path/irrelevant',
+        anonymize: false,
+        projects: [],
+        verbose: true,
+        weeks: 4,
+        slackUrl: 'irrelevant',
+      })
 
-  it('print anonymized report for all the projects inside the given directory', async () => {
-    await new GitReportController(notifierMock, printerMock)
-    .exec({
-      directory: 'path/irrelevant',
-      anonymize: true,
-      projects: [],
-      weeks: 4,
-      slackUrl: 'irrelevant',
+      expect(printerMock.info).toHaveBeenCalledWith(expectedReportVerboseOutput)
     })
 
-    // TODO: Improve this test
-    expect(printerMock.info).not.toHaveBeenCalledWith(expectedReportOutput)
+    it('print anonymized report for all the projects inside the given directory', async () => {
+      await new GitReportController(notifierMock, printerMock)
+      .exec({
+        directory: 'path/irrelevant',
+        anonymize: true,
+        projects: [],
+        verbose: true,
+        weeks: 4,
+        slackUrl: 'irrelevant',
+      })
+
+      // TODO: Improve this test
+      expect(printerMock.info).not.toHaveBeenCalledWith(expectedReportVerboseOutput)
+    })
   })
 
   it('print there is no projects to generate report if no git repository is found in the given directory', async () => {
@@ -99,11 +163,12 @@ describe('Git Reporter Controller should', () => {
       directory: 'path/irrelevant',
       anonymize: true,
       projects: [],
+      verbose: false,
       weeks: 4,
       slackUrl: 'irrelevant',
     })
 
-    expect(printerMock.info).toHaveBeenCalledWith(yellow('⚠️  There is no git projects to report.'))
+    expect(printerMock.info).toHaveBeenCalledWith('[33m⚠️  There are no git projects to report.[39m')
   })
 
   it('notify report on slack', async () => {
@@ -112,11 +177,12 @@ describe('Git Reporter Controller should', () => {
       directory: '',
       anonymize: false,
       projects: ['irrelevant'],
+      verbose: false,
       weeks: 4,
       slackUrl: 'irrelevant',
     })
 
-    expect(notifierMock.publishOnSlack).toBeCalledWith('irrelevant', expectedReportOutput)
+    expect(notifierMock.publishOnSlack).toBeCalledWith('irrelevant', expectedReportCompactOutput)
     expect(printerMock.info).toHaveBeenCalledWith('Report published on Slack.')
   })
 
@@ -126,6 +192,7 @@ describe('Git Reporter Controller should', () => {
       directory: '',
       anonymize: false,
       projects: ['irrelevant'],
+      verbose: false,
       weeks: 4,
       slackUrl: '',
     })

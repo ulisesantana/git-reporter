@@ -1,6 +1,6 @@
 import faker from 'faker'
 import {EOL} from 'os'
-import {yellow} from 'colorette'
+import {cyan, gray, green, magenta, red, yellow} from 'colorette'
 
 export interface CommitterInfo {
   name: string
@@ -66,28 +66,32 @@ export class GitReport {
     return false
   }
 
-  toString(): string {
+  toString({verbose} : {verbose: boolean} = {verbose: false}): string {
     if (this.projects.length === 0) {
-      return yellow('⚠️  There is no git projects to report.')
+      return yellow('⚠️  There are no git projects to report.')
     }
-    return `Report for:
+    return  `Report for:
 ${this.projects.map(project => `  - ${project}`).join(EOL)}
 
-Total commits in the last ${this.weeks} weeks: ${this.totalCommits}${
+Total commits in the last ${this.weeks} weeks: ${cyan(this.totalCommits)}${
   this.committers.length > 0 ? `${EOL}Contributions by author:${EOL}` : ''
-}${this.committers.map(({
-  name,
-  email,
-  totalCommits,
-  totalFilesChanged,
-  totalInsertions,
-  totalDeletions,
-}) => `${EOL}    ${name} (${email}):
-      Commits: ${totalCommits}
-      Files changed: ${totalFilesChanged}
-      Insertions: ${totalInsertions}
-      Deletions: ${totalDeletions}`).join(EOL)
+}${this.committers.map(committerInfo =>
+  `${EOL}    👥 ${magenta(committerInfo.name)}${verbose ? ` (${gray(committerInfo.email)})` : ''}:${verbose ?
+    GitReport.generateVerboseContribution(committerInfo) :
+    GitReport.generateCompactContribution(committerInfo)}`).join('')
 }`
+  }
+
+  private static generateCompactContribution({totalCommits, totalFilesChanged}: CommitterInfo) {
+    return ` ${cyan(totalCommits)} commits and ${yellow(totalFilesChanged)} files changed.`
+  }
+
+  private static generateVerboseContribution({totalFilesChanged, totalCommits, totalInsertions, totalDeletions}: CommitterInfo) {
+    return `
+      ✨ Commits: ${cyan(totalCommits)}
+      📝 Files changed: ${yellow(totalFilesChanged)}
+      ➕ Insertions: ${green(totalInsertions)}
+      ➖ Deletions: ${red(totalDeletions)}${EOL}`
   }
 
   private static sortCommittersByTotalCommitsDesc(committers: CommitterInfo[]): CommitterInfo[] {

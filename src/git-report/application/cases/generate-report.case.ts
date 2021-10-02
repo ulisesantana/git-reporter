@@ -5,6 +5,7 @@ import {GitReport} from '../../domain/git-report'
 import {GitReportImplementationRepository} from '../../infrastructure/git-report.implementation.repository'
 import {GitReportList} from '../../domain/git-report-list'
 import {GitReportPrinter, ProgressBar} from '../../infrastructure/cli/git-report.printer'
+import {EOL} from 'os'
 
 export interface GenerateReportInput {
   /**
@@ -30,6 +31,7 @@ export class GenerateReportUseCase implements UseCase<GenerateReportInput, Promi
 
     if (projectsPaths.length === 0) {
       progress.stop()
+      this.printer.info(EOL)
       return new GitReportList([]).mergeReports()
     }
 
@@ -37,6 +39,7 @@ export class GenerateReportUseCase implements UseCase<GenerateReportInput, Promi
 
     progress.stop()
 
+    this.printer.info(EOL)
     this.printer.printFailedReports(failedReports)
 
     return  new GitReportList(successfulReports).mergeReports()

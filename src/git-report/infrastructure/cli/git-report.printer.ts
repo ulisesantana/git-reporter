@@ -55,7 +55,7 @@ export class GitReportPrinter {
 
   printFailedReports(failedReports: GitReport[]): void {
     if (failedReports.length > 0) {
-      this.logger.error(`${EOL}🚨 The following projects failed to get git log:`)
+      this.logger.error('🚨 The following projects failed to get git log:')
       for (const {projects} of failedReports) {
         this.logger.error(`  - ${projects.map(red).join(`${EOL}  - `)}`)
       }
