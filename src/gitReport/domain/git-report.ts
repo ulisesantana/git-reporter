@@ -1,4 +1,6 @@
 import faker from 'faker'
+import {EOL} from 'os'
+import {yellow} from 'colorette'
 
 export interface CommitterInfo {
   name: string
@@ -60,6 +62,35 @@ export class GitReport {
     })
   }
 
+  hasFailed(): boolean {
+    return false
+  }
+
+  toString(): string {
+    if (this.projects.length === 0) {
+      return yellow('⚠️  There is no git projects to report.')
+    }
+    return `
+Report for: 
+${this.projects.map(project => `  - ${project}`).join(EOL)}
+
+Total commits in the last ${this.weeks} weeks: ${this.totalCommits}
+{Contributions by author:}
+${this.committers.map(({
+    name,
+    email,
+    totalCommits,
+    totalFilesChanged,
+    totalInsertions,
+    totalDeletions,
+  }) => `${EOL}    ${name} (${email}):
+      Commits: ${totalCommits}
+      Files changed: ${totalFilesChanged}
+      Insertions: ${totalInsertions}
+      Deletions: ${totalDeletions}`).join(EOL)}
+`
+  }
+
   private static sortCommittersByTotalCommitsDesc(committers: CommitterInfo[]): CommitterInfo[] {
     return [...committers].sort((a, b) => {
       return GitReport.computeContributionScore(b) - GitReport.computeContributionScore(a) || a.name.localeCompare(b.name)
@@ -82,5 +113,19 @@ export class GitReport {
 
   private static computeContributionScore({totalCommits, totalFilesChanged, totalInsertions, totalDeletions}: CommitterInfo): number {
     return totalCommits + totalFilesChanged + totalInsertions + totalDeletions
+  }
+}
+
+export class FailedGitReport extends GitReport {
+  constructor(projects: string[]) {
+    super({
+      projects,
+      weeks: 0,
+      committers: [],
+    })
+  }
+
+  hasFailed(): boolean {
+    return true
   }
 }

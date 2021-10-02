@@ -1,6 +1,6 @@
-import {GitReportList} from '../domain/git-report-list'
+import {GitReport} from '../domain/git-report'
 
 export interface GitReportRepository {
-  readGitReports (projectsPaths: string[], weeks: number): Promise<GitReportList>
+  readGitReport (projectsPath: string, weeks: number): Promise<GitReport>
   readGitProjects (directoryPath: string): Promise<string[]>
 }

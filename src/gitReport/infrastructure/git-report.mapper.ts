@@ -1,6 +1,6 @@
 import {EOL} from 'os'
 import path from 'path'
-import {CommitterInfo, GitReport} from '../domain/git-report'
+import {CommitterInfo, FailedGitReport, GitReport} from '../domain/git-report'
 
 interface ContributorsStats {
   stats: string[],
@@ -8,7 +8,10 @@ interface ContributorsStats {
 }
 
 export class GitReportMapper {
-  static toDomain(gitLog: string, weeks: number, projectPath: string): GitReport {
+  static toDomain(gitLog: string | undefined, weeks: number, projectPath: string): GitReport {
+    if (gitLog === undefined) {
+      return new FailedGitReport([GitReportMapper.extractProjectName(projectPath)])
+    }
     const contributors = gitLog.split(EOL.concat(EOL)).filter(Boolean)
     return new GitReport({
       weeks,

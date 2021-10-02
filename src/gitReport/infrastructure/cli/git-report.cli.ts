@@ -1,7 +1,7 @@
 import {Command, flags} from '@oclif/command'
-import {version} from '../../../../package.json'
 import {container} from 'tsyringe'
 import {GitReportController} from '../git-report.controller'
+import {GitReportPrinter} from './git-report.printer'
 
 export class GitReportCli extends Command {
   static strict = false
@@ -36,7 +36,8 @@ commits, files changed, insertions and deletions.`
   }
 
   async run(): Promise<void> {
-    this.log(`Initializing git reporter ${version}`)
+    const printer = container.resolve(GitReportPrinter)
+    printer.printInit()
     const {
       argv: projects,
       flags: {
@@ -56,7 +57,7 @@ commits, files changed, insertions and deletions.`
         weeks,
       })
     } catch (error) {
-      this.error(error.toString())
+      printer.error(error.toString())
     }
   }
 }
