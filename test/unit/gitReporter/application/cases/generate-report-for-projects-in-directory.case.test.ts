@@ -4,9 +4,9 @@ import {Shell} from '../../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {GenerateReportForProjectsInDirectoryUseCase} from '../../../../../src/git-report/application/cases/generate-report-for-projects-in-directory.case'
 import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
+import {noop} from '../../../../noop'
 
 describe('Generate a git report reading all git projects in a directory use case', () => {
-  const noop = () => {}
   let gitReporterRepository: GitReportImplementationRepository
   let printerMock: GitReportPrinter
 

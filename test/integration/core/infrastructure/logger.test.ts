@@ -41,6 +41,7 @@ describe('Logger should', () => {
 
 function testLog() {
   require('reflect-metadata')
+  // eslint-disable-next-line node/no-missing-require
   const {Logger} = require('./lib/core/infrastructure/logger')
 
   const log = new Logger()

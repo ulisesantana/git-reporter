@@ -1,3 +1,6 @@
 import 'reflect-metadata'
-console.info = () => {}
-console.error = () => {}
+import {noop} from './noop'
+
+console.info = noop
+console.error = noop
+

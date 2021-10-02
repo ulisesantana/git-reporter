@@ -4,9 +4,9 @@ import {GenerateAnonymizeReportForProjectsInDirectoryUseCase} from '../../../../
 import {Shell} from '../../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
+import {noop} from '../../../../noop'
 
 describe('Generate an anonymize git report reading all git projects in a directory use case', () => {
-  const noop = () => {}
   let gitReporterRepository: GitReportImplementationRepository
   let printerMock: GitReportPrinter
 

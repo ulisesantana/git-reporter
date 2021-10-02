@@ -6,8 +6,8 @@ import {GitReportController} from '../../../../src/git-report/infrastructure/git
 import {Notifier} from '../../../../src/core/infrastructure/notifier'
 import {GitReportPrinter} from '../../../../src/git-report/infrastructure/cli/git-report.printer'
 import {yellow} from 'colorette'
+import {noop} from '../../../noop'
 
-const noop = () => {}
 jest.mock('../../../../src/git-report/infrastructure/cli/git-report.printer')
 jest.mock('../../../../src/core/infrastructure/notifier')
 

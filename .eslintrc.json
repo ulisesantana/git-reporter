@@ -29,6 +29,7 @@
     "@typescript-eslint/no-unused-vars": [
       "error"
     ],
+    "@typescript-eslint/no-empty-function": "off",
     // due to oclif
     "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }]
   }
