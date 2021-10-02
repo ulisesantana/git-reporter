@@ -6,9 +6,7 @@ import {GitReportPrinter} from './git-report.printer'
 export class GitReportCli extends Command {
   static strict = false
 
-  static description = `A command line tool for contribution reporting on git projects. The
-committers will be sorted based on contributions, taking into account
-commits, files changed, insertions and deletions.`
+  static description = 'A command line tool for contribution reporting on git projects. The committers will be sorted based on contributions, taking into account commits, files changed, insertions and deletions.'
 
   static flags = {
     anonymize: flags.boolean({

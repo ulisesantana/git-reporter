@@ -13,38 +13,16 @@ commits, files changed, insertions and deletions.
 [![License](https://img.shields.io/npm/l/git-reporter.svg)](https://github.com/ulisesantana/git-reporter/blob/master/package.json)
 
 
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-# Usage
-<!-- usage -->
-```sh-session
-$ npm install -g git-reporter
-$ git-reporter COMMAND
-running command...
-$ git-reporter (-v|--version|version)
-git-reporter/3.0.0 linux-x64 node-v14.16.0
-$ git-reporter --help [COMMAND]
-USAGE
-  $ git-reporter COMMAND
-...
-```
-<!-- usagestop -->
-# Commands
-<!-- commands -->
-
-<!-- commandsstop -->
 
 ```shell
 npx git-reporter smarthome -w 12 
 🔍 Starting to fetch git logs for: 
   - smarthome
- 
-(1/1) Read git log for /home/ulises/projects/js/smarthome 
 
-Report for: 
+PROGRESS | ████████████████████████████████████████ | 1/1 git projects loaded.
+Report for:
   - smarthome
+
 
 Total commits in the last 12 weeks: 17
 Contributions by author:
@@ -79,13 +57,20 @@ git-reporter -a projects
 
 Command line options:
 ```shell
-USAGE: git-reporter [OPTION1] [OPTION2]... arg1 arg2...
-The following options are supported:
-  -a, --allInDirectory <ARG1>   	Search for all git projects in a directory
-  --anonymize                   	Anonymize author names and emails.
-  -s, --slackUrl <ARG1>         	Slack url for publishing report.
-  -w, --weeks <ARG1>            	Number of weeks in the past to look for commits. ("4" by default)
-  -v, --version               	Return the version for git-reporter.
+Initializing git reporter 3.0.0
+
+A command line tool for contribution reporting on git projects. The committers will be sorted based on contributions, taking into account commits, files changed, insertions and deletions.
+
+USAGE
+  $ git-reporter
+
+OPTIONS
+  -a, --anonymize            Anonymize author names and emails.
+  -d, --directory=directory  Search for all git projects in a directory.
+  -h, --help                 show CLI help
+  -s, --slackUrl=slackUrl    Slack url for publishing report.
+  -v, --version              show CLI version
+  -w, --weeks=weeks          [default: 4] Number of weeks in the past to look for commits.
 ```
 
 ## ⚠️ Things to bear in mind
