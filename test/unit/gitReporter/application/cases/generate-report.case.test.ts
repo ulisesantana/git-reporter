@@ -1,9 +1,9 @@
-import { container } from 'tsyringe'
-import { expectedReport, expectedReportForMultipleRepositories, rawGitLog } from '../../../../fixtures'
-import { Command } from '../../../../../src/core/infrastructure/command'
-import { GitReportImplementationRepository } from '../../../../../src/gitReport/infrastructure/gitReport.implementation.repository'
-import { GenerateReportUseCase } from '../../../../../src/gitReport/application/cases/generateReport.case'
-import { Logger } from '../../../../../src/core/infrastructure/logger'
+import {container} from 'tsyringe'
+import {expectedReport, expectedReportForMultipleRepositories, rawGitLog} from '../../../../fixtures'
+import {Shell} from '../../../../../src/core/infrastructure/shell'
+import {GitReportImplementationRepository} from '../../../../../src/gitReport/infrastructure/git-report.implementation.repository'
+import {GenerateReportUseCase} from '../../../../../src/gitReport/application/cases/generate-report.case'
+import {Logger} from '../../../../../src/core/infrastructure/logger'
 
 describe('Generate a git report based on project paths use case', () => {
   let gitReporterRepository: GitReportImplementationRepository
@@ -11,9 +11,9 @@ describe('Generate a git report based on project paths use case', () => {
 
   beforeEach(() => {
     container.clearInstances()
-    const commandMock = container.resolve(Command)
+    const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
-    container.registerInstance(Command, commandMock)
+    container.registerInstance(Shell, commandMock)
     loggerMock = container.resolve(Logger)
     loggerMock.info = jest.fn()
     loggerMock.error = jest.fn()
@@ -24,10 +24,10 @@ describe('Generate a git report based on project paths use case', () => {
 
   it('generates a report from a single repository', async () => {
     const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: ['path/irrelevant'],
-        weeks: 4
-      })
+    .exec({
+      projectsPaths: ['path/irrelevant'],
+      weeks: 4,
+    })
 
     expect(report.committers).toStrictEqual(expectedReport.committers)
     expect(report.projects).toStrictEqual(expectedReport.projects)
@@ -40,13 +40,13 @@ describe('Generate a git report based on project paths use case', () => {
 
   it('generates a report from multiple repositories', async () => {
     const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: [
-          'path/irrelevant',
-          'path/irrelevant'
-        ],
-        weeks: 4
-      })
+    .exec({
+      projectsPaths: [
+        'path/irrelevant',
+        'path/irrelevant',
+      ],
+      weeks: 4,
+    })
 
     expect(report.committers).toStrictEqual(expectedReportForMultipleRepositories.committers)
     expect(report.projects).toStrictEqual(expectedReportForMultipleRepositories.projects)
@@ -59,10 +59,10 @@ describe('Generate a git report based on project paths use case', () => {
 
   it('generates an empty report if no project paths are given', async () => {
     const report = await new GenerateReportUseCase(gitReporterRepository)
-      .exec({
-        projectsPaths: [],
-        weeks: 4
-      })
+    .exec({
+      projectsPaths: [],
+      weeks: 4,
+    })
 
     expect(report.totalCommits).toBe(0)
     expect(report.committers).toStrictEqual([])

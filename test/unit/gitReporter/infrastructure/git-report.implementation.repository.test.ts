@@ -1,8 +1,8 @@
-import { expectedProjects, expectedReport, rawGitLog, rawProjectList } from '../../../fixtures'
-import { GitReportList } from '../../../../src/gitReport/domain/gitReportList'
-import { Command } from '../../../../src/core/infrastructure/command'
-import { GitReportImplementationRepository } from '../../../../src/gitReport/infrastructure/gitReport.implementation.repository'
-import { Logger } from '../../../../src/core/infrastructure/logger'
+import {expectedProjects, expectedReport, rawGitLog, rawProjectList} from '../../../fixtures'
+import {GitReportList} from '../../../../src/gitReport/domain/git-report-list'
+import {Shell} from '../../../../src/core/infrastructure/shell'
+import {GitReportImplementationRepository} from '../../../../src/gitReport/infrastructure/git-report.implementation.repository'
+import {Logger} from '../../../../src/core/infrastructure/logger'
 
 describe('Git Report Repository should', () => {
   const logger = new Logger()
@@ -13,7 +13,7 @@ describe('Git Report Repository should', () => {
     const expectedReports = new GitReportList([expectedReport, expectedReport])
     const projectPath = 'irrelevant'
     const weeks = 4
-    const command = new Command()
+    const command = new Shell()
     command.run = async () => rawGitLog
     const repository = new GitReportImplementationRepository(command, logger)
 
@@ -28,7 +28,7 @@ describe('Git Report Repository should', () => {
     const expectedReports = new GitReportList([])
     const projectPath = 'irrelevant'
     const weeks = 4
-    const command = new Command()
+    const command = new Shell()
     command.run = async () => {
       throw new Error('Command failed')
     }
@@ -45,7 +45,7 @@ describe('Git Report Repository should', () => {
 
   it('retrieve a list of git projects paths', async () => {
     const projectPath = 'irrelevant'
-    const command = new Command()
+    const command = new Shell()
     command.run = async () => rawProjectList
     const repository = new GitReportImplementationRepository(command, logger)
 
@@ -56,7 +56,7 @@ describe('Git Report Repository should', () => {
 
   it('retrieve an empty list of git projects paths if there is no one in the given repository', async () => {
     const projectPath = 'irrelevant'
-    const command = new Command()
+    const command = new Shell()
     command.run = async () => '\nzsh: no matches found: /*/.git'
     const repository = new GitReportImplementationRepository(command, logger)
 

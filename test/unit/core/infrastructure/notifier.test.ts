@@ -1,15 +1,15 @@
-import { container } from 'tsyringe'
-import { request } from 'undici'
-import { Logger } from '../../../../src/core/infrastructure/logger'
-import { Notifier } from '../../../../src/core/infrastructure/notifier'
+import {container} from 'tsyringe'
+import {request} from 'undici'
+import {Logger} from '../../../../src/core/infrastructure/logger'
+import {Notifier} from '../../../../src/core/infrastructure/notifier'
 
 jest.mock('undici', () => ({
   ...(jest.requireActual<any>('undici')),
-  request: jest.fn(async (slackUrl) => {
+  request: jest.fn(async slackUrl => {
     if (slackUrl === '') {
       throw new Error('Boom!!')
     }
-  })
+  }),
 }))
 
 describe('Notifier should', () => {
@@ -25,7 +25,7 @@ describe('Notifier should', () => {
 
     expect(request).toHaveBeenCalledWith(slackUrl, {
       method: 'POST',
-      body: JSON.stringify({ text: message }, null, 2)
+      body: JSON.stringify({text: message}, null, 2),
     })
     expect(logger.error).not.toHaveBeenCalledWith('Boom!!')
   })

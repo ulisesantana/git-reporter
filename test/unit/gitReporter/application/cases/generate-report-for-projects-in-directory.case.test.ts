@@ -1,9 +1,9 @@
-import { container } from 'tsyringe'
-import { expectedReport, rawGitLog } from '../../../../fixtures'
-import { Command } from '../../../../../src/core/infrastructure/command'
-import { Logger } from '../../../../../src/core/infrastructure/logger'
-import { GitReportImplementationRepository } from '../../../../../src/gitReport/infrastructure/gitReport.implementation.repository'
-import { GenerateReportForProjectsInDirectoryUseCase } from '../../../../../src/gitReport/application/cases/generateReportForProjectsInDirectory.case'
+import {container} from 'tsyringe'
+import {expectedReport, rawGitLog} from '../../../../fixtures'
+import {Shell} from '../../../../../src/core/infrastructure/shell'
+import {Logger} from '../../../../../src/core/infrastructure/logger'
+import {GitReportImplementationRepository} from '../../../../../src/gitReport/infrastructure/git-report.implementation.repository'
+import {GenerateReportForProjectsInDirectoryUseCase} from '../../../../../src/gitReport/application/cases/generate-report-for-projects-in-directory.case'
 
 describe('Generate a git report reading all git projects in a directory use case', () => {
   let gitReporterRepository: GitReportImplementationRepository
@@ -11,9 +11,9 @@ describe('Generate a git report reading all git projects in a directory use case
 
   beforeEach(() => {
     container.clearInstances()
-    const commandMock = container.resolve(Command)
+    const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
-    container.registerInstance(Command, commandMock)
+    container.registerInstance(Shell, commandMock)
     loggerMock = container.resolve(Logger)
     loggerMock.info = jest.fn()
     loggerMock.error = jest.fn()
@@ -24,10 +24,10 @@ describe('Generate a git report reading all git projects in a directory use case
 
   it('generates a report successfully', async () => {
     const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
-      .exec({
-        directoryPath: 'path/irrelevant',
-        weeks: 4
-      })
+    .exec({
+      directoryPath: 'path/irrelevant',
+      weeks: 4,
+    })
 
     expect(report.committers).toStrictEqual(expectedReport.committers)
     expect(report.projects).toStrictEqual(expectedReport.projects)
@@ -42,10 +42,10 @@ describe('Generate a git report reading all git projects in a directory use case
     gitReporterRepository.readGitProjects = jest.fn(async () => [])
 
     const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
-      .exec({
-        directoryPath: 'path/irrelevant',
-        weeks: 4
-      })
+    .exec({
+      directoryPath: 'path/irrelevant',
+      weeks: 4,
+    })
 
     expect(report.committers).toStrictEqual([])
     expect(report.projects).toStrictEqual([])

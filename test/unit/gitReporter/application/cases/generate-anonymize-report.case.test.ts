@@ -1,18 +1,18 @@
-import { container } from 'tsyringe'
-import { expectedReport, rawGitLog } from '../../../../fixtures'
-import { GenerateAnonymizeReportForProjectsInDirectoryUseCase } from '../../../../../src/gitReport/application/cases/generateAnonymizeReportForProjectsInDirectory.case'
-import { Command } from '../../../../../src/core/infrastructure/command'
-import { GitReportImplementationRepository } from '../../../../../src/gitReport/infrastructure/gitReport.implementation.repository'
-import { Logger } from '../../../../../src/core/infrastructure/logger'
+import {container} from 'tsyringe'
+import {expectedReport, rawGitLog} from '../../../../fixtures'
+import {GenerateAnonymizeReportUseCase} from '../../../../../src/gitReport/application/cases/generate-anonymize-report.case'
+import {Shell} from '../../../../../src/core/infrastructure/shell'
+import {GitReportImplementationRepository} from '../../../../../src/gitReport/infrastructure/git-report.implementation.repository'
+import {Logger} from '../../../../../src/core/infrastructure/logger'
 
-describe('Generate an anonymize git report reading all git projects in a directory use case', () => {
+describe('Generate an anonymize git report based on project paths use case', () => {
   let gitReporterRepository: GitReportImplementationRepository
 
   beforeEach(() => {
     container.clearInstances()
-    const commandMock = container.resolve(Command)
+    const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
-    container.registerInstance(Command, commandMock)
+    container.registerInstance(Shell, commandMock)
     const loggerMock = container.resolve(Logger)
     loggerMock.info = jest.fn()
     loggerMock.error = jest.fn()
@@ -22,11 +22,11 @@ describe('Generate an anonymize git report reading all git projects in a directo
   })
 
   it('anonymizes committers personal data', async () => {
-    const report = await new GenerateAnonymizeReportForProjectsInDirectoryUseCase(gitReporterRepository)
-      .exec({
-        directoryPath: 'path/irrelevant',
-        weeks: 4
-      })
+    const report = await new GenerateAnonymizeReportUseCase(gitReporterRepository)
+    .exec({
+      projectsPaths: ['path/irrelevant'],
+      weeks: 4,
+    })
 
     expect(report.totalCommits).toBe(expectedReport.totalCommits)
     expect(report.projects).toStrictEqual(expectedReport.projects)
