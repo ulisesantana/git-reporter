@@ -82,11 +82,11 @@ Total commits in the last ${this.weeks} weeks: ${this.totalCommits}${
   totalFilesChanged,
   totalInsertions,
   totalDeletions,
-}) => `${EOL}    ${name} (${email}):
-      Commits: ${totalCommits}
-      Files changed: ${totalFilesChanged}
-      Insertions: ${totalInsertions}
-      Deletions: ${totalDeletions}`).join(EOL)
+}) => `${EOL}    👥 ${name} (${email}):
+      ✨ Commits: ${totalCommits}
+      📝 Files changed: ${totalFilesChanged}
+      ➕ Insertions: ${totalInsertions}
+      ➖ Deletions: ${totalDeletions}`).join(EOL)
 }`
   }
 

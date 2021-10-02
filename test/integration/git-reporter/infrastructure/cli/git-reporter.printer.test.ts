@@ -78,7 +78,7 @@ describe('GitReportPrinter should', () => {
       new FailedGitReport(['irrelevant3']),
     ])
 
-    expect(logger.error).toHaveBeenCalledWith(`${EOL}🚨 The following projects failed to get git log:`)
+    expect(logger.error).toHaveBeenCalledWith('🚨 The following projects failed to get git log:')
     expect(logger.error).toHaveBeenCalledWith(`  - ${red('irrelevant')}${EOL}  - ${red('irrelevant2')}`)
     expect(logger.error).toHaveBeenCalledWith(`  - ${red('irrelevant3')}`)
   })
