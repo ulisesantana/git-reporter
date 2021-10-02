@@ -1,12 +1,12 @@
 import { container } from 'tsyringe'
 import { expectedReport, expectedReportForMultipleRepositories, rawGitLog } from '../../../../fixtures'
 import { Command } from '../../../../../src/core/infrastructure/command'
-import { GitReportCommandRepository } from '../../../../../src/gitReport/infrastructure/gitReport.command.repository'
+import { GitReportImplementationRepository } from '../../../../../src/gitReport/infrastructure/gitReport.implementation.repository'
 import { GenerateReportUseCase } from '../../../../../src/gitReport/application/cases/generateReport.case'
 import { Logger } from '../../../../../src/core/infrastructure/logger'
 
 describe('Generate a git report based on project paths use case', () => {
-  let gitReporterRepository: GitReportCommandRepository
+  let gitReporterRepository: GitReportImplementationRepository
   let loggerMock: Logger
 
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('Generate a git report based on project paths use case', () => {
     loggerMock.info = jest.fn()
     loggerMock.error = jest.fn()
     container.registerInstance(Logger, loggerMock)
-    gitReporterRepository = container.resolve(GitReportCommandRepository)
+    gitReporterRepository = container.resolve(GitReportImplementationRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 

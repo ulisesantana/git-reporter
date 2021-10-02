@@ -3,7 +3,7 @@ import { GitReportRepository } from '../gitReport.repository'
 import { UseCase } from '../../../core/domain/useCase'
 import { GenerateReportUseCase } from './generateReport.case'
 import { GitReport } from '../../domain/gitReport'
-import { GitReportCommandRepository } from '../../infrastructure/gitReport.command.repository'
+import { GitReportImplementationRepository } from '../../infrastructure/gitReport.implementation.repository'
 
 export interface GenerateReportForProjectsInDirectoryInput {
   /**
@@ -19,7 +19,7 @@ export interface GenerateReportForProjectsInDirectoryInput {
 @injectable()
 export class GenerateReportForProjectsInDirectoryUseCase
 implements UseCase<GenerateReportForProjectsInDirectoryInput, Promise<GitReport>> {
-  constructor (@inject(GitReportCommandRepository) private repository: GitReportRepository) {}
+  constructor (@inject(GitReportImplementationRepository) private repository: GitReportRepository) {}
 
   async exec ({ directoryPath, weeks }: GenerateReportForProjectsInDirectoryInput): Promise<GitReport> {
     const projectsPaths = await this.repository.readGitProjects(directoryPath)

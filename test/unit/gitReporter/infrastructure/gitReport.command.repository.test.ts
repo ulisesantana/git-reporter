@@ -1,7 +1,7 @@
 import { expectedProjects, expectedReport, rawGitLog, rawProjectList } from '../../../fixtures'
 import { GitReportList } from '../../../../src/gitReport/domain/gitReportList'
 import { Command } from '../../../../src/core/infrastructure/command'
-import { GitReportCommandRepository } from '../../../../src/gitReport/infrastructure/gitReport.command.repository'
+import { GitReportImplementationRepository } from '../../../../src/gitReport/infrastructure/gitReport.implementation.repository'
 import { Logger } from '../../../../src/core/infrastructure/logger'
 
 describe('Git Report Repository should', () => {
@@ -15,7 +15,7 @@ describe('Git Report Repository should', () => {
     const weeks = 4
     const command = new Command()
     command.run = async () => rawGitLog
-    const repository = new GitReportCommandRepository(command, logger)
+    const repository = new GitReportImplementationRepository(command, logger)
 
     const reports = await repository.readGitReports([projectPath, projectPath], weeks)
 
@@ -32,7 +32,7 @@ describe('Git Report Repository should', () => {
     command.run = async () => {
       throw new Error('Command failed')
     }
-    const repository = new GitReportCommandRepository(command, logger)
+    const repository = new GitReportImplementationRepository(command, logger)
 
     const reports = await repository.readGitReports([projectPath, projectPath], weeks)
 
@@ -47,7 +47,7 @@ describe('Git Report Repository should', () => {
     const projectPath = 'irrelevant'
     const command = new Command()
     command.run = async () => rawProjectList
-    const repository = new GitReportCommandRepository(command, logger)
+    const repository = new GitReportImplementationRepository(command, logger)
 
     const projects = await repository.readGitProjects(projectPath)
 
@@ -58,7 +58,7 @@ describe('Git Report Repository should', () => {
     const projectPath = 'irrelevant'
     const command = new Command()
     command.run = async () => '\nzsh: no matches found: /*/.git'
-    const repository = new GitReportCommandRepository(command, logger)
+    const repository = new GitReportImplementationRepository(command, logger)
 
     const projects = await repository.readGitProjects(projectPath)
 

@@ -10,7 +10,7 @@ import { GitReportMapper } from './gitReport.mapper'
 import { EOL } from 'os'
 
 @injectable()
-export class GitReportCommandRepository implements GitReportRepository {
+export class GitReportImplementationRepository implements GitReportRepository {
   constructor (
     @inject(Command) private readonly command: Command,
     @inject(Logger) private readonly logger: Logger
