@@ -1,5 +1,6 @@
-import { GitReport } from '../../../../src/gitReport/domain/gitReport'
-import { buildCommitterInfo } from '../../../builders'
+import {FailedGitReport, GitReport} from '../../../../src/git-report/domain/git-report'
+import {buildCommitterInfo} from '../../../builders'
+import {expectedReport, expectedReportOutput} from '../../../fixtures'
 
 describe('Git Report should', () => {
   it('retrieve total commits between all committers', async () => {
@@ -7,9 +8,9 @@ describe('Git Report should', () => {
       weeks: 4,
       projects: [],
       committers: [
-        buildCommitterInfo({ totalCommits: 1 }),
-        buildCommitterInfo({ totalCommits: 1 })
-      ]
+        buildCommitterInfo({totalCommits: 1}),
+        buildCommitterInfo({totalCommits: 1}),
+      ],
     })
 
     expect(report.totalCommits).toBe(2)
@@ -20,9 +21,9 @@ describe('Git Report should', () => {
       weeks: 4,
       projects: [],
       committers: [
-        buildCommitterInfo({ totalInsertions: 2 }),
-        buildCommitterInfo({ totalInsertions: 2 })
-      ]
+        buildCommitterInfo({totalInsertions: 2}),
+        buildCommitterInfo({totalInsertions: 2}),
+      ],
     })
 
     expect(report.totalInsertions).toBe(4)
@@ -33,9 +34,9 @@ describe('Git Report should', () => {
       weeks: 4,
       projects: [],
       committers: [
-        buildCommitterInfo({ totalDeletions: 2 }),
-        buildCommitterInfo({ totalDeletions: 2 })
-      ]
+        buildCommitterInfo({totalDeletions: 2}),
+        buildCommitterInfo({totalDeletions: 2}),
+      ],
     })
 
     expect(report.totalDeletions).toBe(4)
@@ -46,9 +47,9 @@ describe('Git Report should', () => {
       weeks: 4,
       projects: [],
       committers: [
-        buildCommitterInfo({ totalFilesChanged: 2 }),
-        buildCommitterInfo({ totalFilesChanged: 2 })
-      ]
+        buildCommitterInfo({totalFilesChanged: 2}),
+        buildCommitterInfo({totalFilesChanged: 2}),
+      ],
     })
 
     expect(report.totalFilesChanged).toBe(4)
@@ -60,7 +61,7 @@ describe('Git Report should', () => {
     const report = new GitReport({
       weeks: 4,
       projects: [],
-      committers
+      committers,
     })
 
     expect(report.committers).toEqual(committers)
@@ -70,7 +71,7 @@ describe('Git Report should', () => {
     const report = new GitReport({
       weeks: 4,
       projects: [],
-      committers: []
+      committers: [],
     })
 
     expect(report.weeks).toBe(4)
@@ -82,7 +83,7 @@ describe('Git Report should', () => {
     const report = new GitReport({
       weeks: 4,
       projects,
-      committers: []
+      committers: [],
     })
 
     expect(report.projects).toEqual(projects)
@@ -90,14 +91,14 @@ describe('Git Report should', () => {
 
   it('anonymize committers personal data', () => {
     const committers = [
-      buildCommitterInfo({ name: 'Robin', email: 'robin@batman.cave', totalCommits: 2 }),
-      buildCommitterInfo({ name: 'Batman', email: 'im@batman.cave', totalCommits: 1 })
+      buildCommitterInfo({name: 'Robin', email: 'robin@batman.cave', totalCommits: 2}),
+      buildCommitterInfo({name: 'Batman', email: 'im@batman.cave', totalCommits: 1}),
     ]
 
     const report = new GitReport({
       weeks: 4,
       projects: [],
-      committers
+      committers,
     }).anonymize()
 
     expect(report.totalCommits).toBe(3)
@@ -111,15 +112,15 @@ describe('Git Report should', () => {
 
   it('sort committers by total commits, insertions, deletions and files changed', () => {
     const committers = [
-      buildCommitterInfo({ name: 'Robin', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 }),
-      buildCommitterInfo({ name: 'Batman', totalCommits: 1, totalInsertions: 13, totalDeletions: 41, totalFilesChanged: 20 }),
-      buildCommitterInfo({ name: 'Nightwing', totalCommits: 5, totalInsertions: 30, totalDeletions: 4, totalFilesChanged: 2 })
+      buildCommitterInfo({name: 'Robin', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2}),
+      buildCommitterInfo({name: 'Batman', totalCommits: 1, totalInsertions: 13, totalDeletions: 41, totalFilesChanged: 20}),
+      buildCommitterInfo({name: 'Nightwing', totalCommits: 5, totalInsertions: 30, totalDeletions: 4, totalFilesChanged: 2}),
     ]
 
     const report = new GitReport({
       weeks: 4,
       projects: [],
-      committers
+      committers,
     })
 
     expect(report.committers[0].name).toBe('Batman')
@@ -128,21 +129,50 @@ describe('Git Report should', () => {
   })
   it('sort committers by name if they have done the same contributions', () => {
     const committers = [
-      buildCommitterInfo({ name: 'Robin', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 }),
-      buildCommitterInfo({ name: 'Alfred', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 }),
-      buildCommitterInfo({ name: 'Batman', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 }),
-      buildCommitterInfo({ name: 'Nightwing', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2 })
+      buildCommitterInfo({name: 'Robin', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2}),
+      buildCommitterInfo({name: 'Alfred', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2}),
+      buildCommitterInfo({name: 'Batman', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2}),
+      buildCommitterInfo({name: 'Nightwing', totalCommits: 2, totalInsertions: 3, totalDeletions: 4, totalFilesChanged: 2}),
     ]
 
     const report = new GitReport({
       weeks: 4,
       projects: [],
-      committers
+      committers,
     })
 
     expect(report.committers[0].name).toBe('Alfred')
     expect(report.committers[1].name).toBe('Batman')
     expect(report.committers[2].name).toBe('Nightwing')
     expect(report.committers[3].name).toBe('Robin')
+  })
+
+  it('parse report to string', () => {
+    const report = new GitReport({
+      projects: expectedReport.projects,
+      committers: expectedReport.committers,
+      weeks: expectedReport.weeks,
+    })
+    expect(report.toString()).toBe(expectedReportOutput)
+  })
+
+  it('parse report to string not showing committers if there are not given', () => {
+    const report = new GitReport({
+      projects: expectedReport.projects,
+      weeks: expectedReport.weeks,
+      committers: [],
+    })
+    expect(report.toString()).toBe(`Report for:
+  - irrelevant
+
+Total commits in the last 4 weeks: 0`)
+  })
+
+  it('return if has failed during its generation', () => {
+    const report = new GitReport({committers: [], weeks: 0, projects: []})
+    const failedReport = new FailedGitReport([])
+
+    expect(report.hasFailed()).toBeFalsy()
+    expect(failedReport.hasFailed()).toBeTruthy()
   })
 })

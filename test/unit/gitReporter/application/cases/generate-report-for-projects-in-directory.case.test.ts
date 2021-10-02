@@ -1,33 +1,39 @@
-import { container } from 'tsyringe'
-import { expectedReport, rawGitLog } from '../../../../fixtures'
-import { Command } from '../../../../../src/core/infrastructure/command'
-import { Logger } from '../../../../../src/core/infrastructure/logger'
-import { GitReportImplementationRepository } from '../../../../../src/gitReport/infrastructure/gitReport.implementation.repository'
-import { GenerateReportForProjectsInDirectoryUseCase } from '../../../../../src/gitReport/application/cases/generateReportForProjectsInDirectory.case'
+import {container} from 'tsyringe'
+import {expectedReport, rawGitLog} from '../../../../fixtures'
+import {Shell} from '../../../../../src/core/infrastructure/shell'
+import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
+import {GenerateReportForProjectsInDirectoryUseCase} from '../../../../../src/git-report/application/cases/generate-report-for-projects-in-directory.case'
+import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
 
 describe('Generate a git report reading all git projects in a directory use case', () => {
+  const noop = () => {}
   let gitReporterRepository: GitReportImplementationRepository
-  let loggerMock: Logger
+  let printerMock: GitReportPrinter
 
   beforeEach(() => {
     container.clearInstances()
-    const commandMock = container.resolve(Command)
+    const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
-    container.registerInstance(Command, commandMock)
-    loggerMock = container.resolve(Logger)
-    loggerMock.info = jest.fn()
-    loggerMock.error = jest.fn()
-    container.registerInstance(Logger, loggerMock)
+    container.registerInstance(Shell, commandMock)
+    printerMock = container.resolve(GitReportPrinter)
+    printerMock.generateProgressBar = () => ({
+      start: noop,
+      value: 0,
+      total: 0,
+      increment: noop,
+      stop: noop,
+    })
+    container.registerInstance(GitReportPrinter, printerMock)
     gitReporterRepository = container.resolve(GitReportImplementationRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
   it('generates a report successfully', async () => {
-    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
-      .exec({
-        directoryPath: 'path/irrelevant',
-        weeks: 4
-      })
+    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository, printerMock)
+    .exec({
+      directoryPath: 'path/irrelevant',
+      weeks: 4,
+    })
 
     expect(report.committers).toStrictEqual(expectedReport.committers)
     expect(report.projects).toStrictEqual(expectedReport.projects)
@@ -41,11 +47,11 @@ describe('Generate a git report reading all git projects in a directory use case
   it('generates an empty report if no project paths are given', async () => {
     gitReporterRepository.readGitProjects = jest.fn(async () => [])
 
-    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository)
-      .exec({
-        directoryPath: 'path/irrelevant',
-        weeks: 4
-      })
+    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository, printerMock)
+    .exec({
+      directoryPath: 'path/irrelevant',
+      weeks: 4,
+    })
 
     expect(report.committers).toStrictEqual([])
     expect(report.projects).toStrictEqual([])

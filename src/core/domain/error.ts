@@ -1,4 +1,4 @@
-export function handleError (error: unknown, log: (...text: string[]) => void) {
+export function handleError(error: unknown, log: (...text: string[]) => void) {
   if (error instanceof Error) {
     log(error.toString())
     error.stack && log(error.stack)

@@ -1,6 +1,14 @@
 node_modules
 build
+lib
 .vscode
 .idea
 coverage
 package-lock.json
+*-debug.log
+*-error.log
+nyc_output
+dist
+tmp
+yarn.lock
+*.tsbuildinfo

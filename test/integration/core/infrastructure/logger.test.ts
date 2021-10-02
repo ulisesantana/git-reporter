@@ -1,26 +1,26 @@
 import util from 'util'
-import { exec as execCallback } from 'child_process'
-import { Logger } from '../../../../src/core/infrastructure/logger'
+import {exec as execCallback} from 'child_process'
+import {Logger} from '../../../../src/core/infrastructure/logger'
 
 const exec = util.promisify(execCallback)
 
 describe('Logger should', () => {
   beforeAll(async () => {
-    await exec('npm run build:only')
-  }, 30_000)
+    await exec('npm run build')
+  }, 60_000)
   afterAll(() => {
     jest.resetAllMocks()
   })
 
   it('output logs', async () => {
-    const { stdout } = await exec(`node -e "(${testLog.toString()})()"`)
+    const {stdout} = await exec(`node -e "(${testLog.toString()})()"`)
 
     expect(stdout).toContain('info')
     expect(stdout).not.toContain('error')
   })
 
   it('output error', async () => {
-    const { stderr } = await exec(`node -e "(${testLog.toString()})()"`)
+    const {stderr} = await exec(`node -e "(${testLog.toString()})()"`)
 
     expect(stderr).toContain('error')
     expect(stderr).not.toContain('info')
@@ -39,9 +39,9 @@ describe('Logger should', () => {
   })
 })
 
-function testLog () {
+function testLog() {
   require('reflect-metadata')
-  const { Logger } = require('./build/core/infrastructure/logger')
+  const {Logger} = require('./lib/core/infrastructure/logger')
 
   const log = new Logger()
 

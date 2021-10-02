@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import { container } from 'tsyringe'
-import { GitReportController } from './gitReport/infrastructure/gitReport.controller'
+import {GitReportCli} from './git-report/infrastructure/cli/git-report.cli'
 
-export const gitReporter = container.resolve(GitReportController)
+export = GitReportCli

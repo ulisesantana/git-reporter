@@ -1,4 +1,4 @@
-import { handleError } from '../../../../src/core/domain/error'
+import {handleError} from '../../../../src/core/domain/error'
 
 describe('Errors should be handled', () => {
   it('logging instances of errors', () => {

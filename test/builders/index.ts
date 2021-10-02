@@ -1,1 +1,1 @@
-export * from './committerInfo.builder'
+export * from './committer-info.builder'

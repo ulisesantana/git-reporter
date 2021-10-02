@@ -1,12 +1,12 @@
-import { injectable } from 'tsyringe'
+import {injectable} from 'tsyringe'
 
 @injectable()
 export class Logger {
-  info (...text: string[]): void {
+  info(...text: string[]): void {
     console.info(...text)
   }
 
-  error (...text: string[]): void {
+  error(...text: string[]): void {
     console.error(...text)
   }
 }

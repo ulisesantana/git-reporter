@@ -1,10 +1,40 @@
-# git-reporter
+git-reporter
+============
+
+A command line tool for contribution reporting on git projects. The
+committers will be sorted based on contributions, taking into account
+commits, files changed, insertions and deletions.
+
 [![Build Status](https://travis-ci.com/ulisesantana/git-reporter.svg?branch=master)](https://travis-ci.com/ulisesantana/git-reporter)
 [![codecov](https://codecov.io/gh/ulisesantana/git-reporter/branch/master/graph/badge.svg?token=6N32FMeuth)](https://codecov.io/gh/ulisesantana/git-reporter)
+[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Version](https://img.shields.io/npm/v/git-reporter.svg)](https://npmjs.org/package/git-reporter)
+[![Downloads/week](https://img.shields.io/npm/dw/git-reporter.svg)](https://npmjs.org/package/git-reporter)
+[![License](https://img.shields.io/npm/l/git-reporter.svg)](https://github.com/ulisesantana/git-reporter/blob/master/package.json)
 
-A command line tool for contribution reporting on git projects. The 
-committers will be sorted based on contributions, taking into account 
-commits, files changed, insertions and deletions.
+
+<!-- toc -->
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
+# Usage
+<!-- usage -->
+```sh-session
+$ npm install -g git-reporter
+$ git-reporter COMMAND
+running command...
+$ git-reporter (-v|--version|version)
+git-reporter/3.0.0 linux-x64 node-v14.16.0
+$ git-reporter --help [COMMAND]
+USAGE
+  $ git-reporter COMMAND
+...
+```
+<!-- usagestop -->
+# Commands
+<!-- commands -->
+
+<!-- commandsstop -->
 
 ```shell
 npx git-reporter smarthome -w 12 
