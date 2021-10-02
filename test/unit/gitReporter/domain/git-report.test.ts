@@ -1,5 +1,6 @@
-import {GitReport} from '../../../../src/git-report/domain/git-report'
+import {FailedGitReport, GitReport} from '../../../../src/git-report/domain/git-report'
 import {buildCommitterInfo} from '../../../builders'
+import {expectedReport, expectedReportOutput} from '../../../fixtures'
 
 describe('Git Report should', () => {
   it('retrieve total commits between all committers', async () => {
@@ -144,5 +145,34 @@ describe('Git Report should', () => {
     expect(report.committers[1].name).toBe('Batman')
     expect(report.committers[2].name).toBe('Nightwing')
     expect(report.committers[3].name).toBe('Robin')
+  })
+
+  it('parse report to string', () => {
+    const report = new GitReport({
+      projects: expectedReport.projects,
+      committers: expectedReport.committers,
+      weeks: expectedReport.weeks,
+    })
+    expect(report.toString()).toBe(expectedReportOutput)
+  })
+
+  it('parse report to string not showing committers if there are not given', () => {
+    const report = new GitReport({
+      projects: expectedReport.projects,
+      weeks: expectedReport.weeks,
+      committers: [],
+    })
+    expect(report.toString()).toBe(`Report for:
+  - irrelevant
+
+Total commits in the last 4 weeks: 0`)
+  })
+
+  it('return if has failed during its generation', () => {
+    const report = new GitReport({committers: [], weeks: 0, projects: []})
+    const failedReport = new FailedGitReport([])
+
+    expect(report.hasFailed()).toBeFalsy()
+    expect(failedReport.hasFailed()).toBeTruthy()
   })
 })

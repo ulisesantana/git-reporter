@@ -18,7 +18,8 @@ describe('Generate an anonymize git report reading all git projects in a directo
     printerMock = container.resolve(GitReportPrinter)
     printerMock.generateProgressBar = () => ({
       start: noop,
-      update: noop,
+      value: 0,
+      total: 0,
       increment: noop,
       stop: noop,
     })

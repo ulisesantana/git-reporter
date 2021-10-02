@@ -70,25 +70,24 @@ export class GitReport {
     if (this.projects.length === 0) {
       return yellow('⚠️  There is no git projects to report.')
     }
-    return `
-Report for: 
+    return `Report for:
 ${this.projects.map(project => `  - ${project}`).join(EOL)}
 
-Total commits in the last ${this.weeks} weeks: ${this.totalCommits}
-${this.committers.length > 0 ? 'Contributions by author:' : ''}
-${this.committers.map(({
-    name,
-    email,
-    totalCommits,
-    totalFilesChanged,
-    totalInsertions,
-    totalDeletions,
-  }) => `${EOL}    ${name} (${email}):
+Total commits in the last ${this.weeks} weeks: ${this.totalCommits}${
+  this.committers.length > 0 ? `${EOL}Contributions by author:${EOL}` : ''
+}${this.committers.map(({
+  name,
+  email,
+  totalCommits,
+  totalFilesChanged,
+  totalInsertions,
+  totalDeletions,
+}) => `${EOL}    ${name} (${email}):
       Commits: ${totalCommits}
       Files changed: ${totalFilesChanged}
       Insertions: ${totalInsertions}
-      Deletions: ${totalDeletions}`).join(EOL)}
-`
+      Deletions: ${totalDeletions}`).join(EOL)
+}`
   }
 
   private static sortCommittersByTotalCommitsDesc(committers: CommitterInfo[]): CommitterInfo[] {

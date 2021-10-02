@@ -30,7 +30,8 @@ describe('Git Reporter Controller should', () => {
     printerMock = container.resolve(GitReportPrinter)
     printerMock.generateProgressBar = () => ({
       start: noop,
-      update: noop,
+      value: 0,
+      total: 0,
       increment: noop,
       stop: noop,
     })

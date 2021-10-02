@@ -92,8 +92,7 @@ export const expectedReportForMultipleRepositories: GitReport = {
   })),
 } as GitReport
 
-export const expectedReportOutput = `
-Report for: 
+export const expectedReportOutput = `Report for:
   - irrelevant
 
 Total commits in the last 4 weeks: 13
@@ -145,5 +144,4 @@ Contributions by author:
       Commits: 1
       Files changed: 1
       Insertions: 1
-      Deletions: 0
-`
+      Deletions: 0`
