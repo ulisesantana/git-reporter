@@ -1,4 +1,4 @@
-import {GitReport} from '../../../../src/gitReport/domain/git-report'
+import {GitReport} from '../../../../src/git-report/domain/git-report'
 import {buildCommitterInfo} from '../../../builders'
 
 describe('Git Report should', () => {

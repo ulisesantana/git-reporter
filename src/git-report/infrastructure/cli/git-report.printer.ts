@@ -1,7 +1,7 @@
 import {singleton} from 'tsyringe'
 import {cli} from 'cli-ux'
 import {Logger} from '../../../core/infrastructure/logger'
-import {green, underline} from 'colorette'
+import {green, red, underline} from 'colorette'
 import path from 'path'
 import {EOL} from 'os'
 import {GitReport} from '../../domain/git-report'
@@ -45,7 +45,7 @@ export class GitReportPrinter extends Logger {
     if (failedReports.length > 0) {
       this.error(`${EOL}🚨 The following projects failed to get git log:`)
       for (const {projects} of failedReports) {
-        this.error(`  - ${projects.join(`${EOL}  - `)}${EOL}`)
+        this.error(`  - ${projects.map(red).join(`${EOL}  - `)}${EOL}`)
       }
     }
   }

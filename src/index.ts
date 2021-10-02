@@ -1,4 +1,4 @@
 import 'reflect-metadata'
-import {GitReportCli} from './gitReport/infrastructure/cli/git-report.cli'
+import {GitReportCli} from './git-report/infrastructure/cli/git-report.cli'
 
 export = GitReportCli

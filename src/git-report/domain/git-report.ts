@@ -75,7 +75,7 @@ Report for:
 ${this.projects.map(project => `  - ${project}`).join(EOL)}
 
 Total commits in the last ${this.weeks} weeks: ${this.totalCommits}
-{Contributions by author:}
+${this.committers.length > 0 ? 'Contributions by author:' : ''}
 ${this.committers.map(({
     name,
     email,

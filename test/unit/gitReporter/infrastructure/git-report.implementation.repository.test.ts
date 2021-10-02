@@ -1,53 +1,41 @@
 import {expectedProjects, expectedReport, rawGitLog, rawProjectList} from '../../../fixtures'
-import {GitReportList} from '../../../../src/gitReport/domain/git-report-list'
 import {Shell} from '../../../../src/core/infrastructure/shell'
-import {GitReportImplementationRepository} from '../../../../src/gitReport/infrastructure/git-report.implementation.repository'
-import {Logger} from '../../../../src/core/infrastructure/logger'
+import {GitReportImplementationRepository} from '../../../../src/git-report/infrastructure/git-report.implementation.repository'
+import {FailedGitReport} from '../../../../src/git-report/domain/git-report'
 
 describe('Git Report Repository should', () => {
-  const logger = new Logger()
-  logger.info = jest.fn()
-  logger.error = jest.fn()
-
   it('retrieve a list of git reports', async () => {
-    const expectedReports = new GitReportList([expectedReport, expectedReport])
     const projectPath = 'irrelevant'
     const weeks = 4
     const command = new Shell()
     command.run = async () => rawGitLog
-    const repository = new GitReportImplementationRepository(command, logger)
+    const repository = new GitReportImplementationRepository(command)
 
-    const reports = await repository.readGitReports([projectPath, projectPath], weeks)
+    const report = await repository.readGitReport(projectPath, weeks)
 
-    expect(reports).toEqual(expectedReports)
-    expect(logger.info).toHaveBeenCalledWith(`(1/2) Read git log for ${projectPath}`)
-    expect(logger.info).toHaveBeenCalledWith(`(2/2) Read git log for ${projectPath}`)
+    expect(report).toEqual(expectedReport)
   })
 
-  it('retrieve an empty list of git reports if there is not git projects for the given directories', async () => {
-    const expectedReports = new GitReportList([])
+  it('retrieve a failed git reports if there is not git projects for the given directories', async () => {
+    const failedGitReport = new FailedGitReport(expectedReport.projects)
     const projectPath = 'irrelevant'
     const weeks = 4
     const command = new Shell()
     command.run = async () => {
       throw new Error('Command failed')
     }
-    const repository = new GitReportImplementationRepository(command, logger)
+    const repository = new GitReportImplementationRepository(command)
 
-    const reports = await repository.readGitReports([projectPath, projectPath], weeks)
+    const report = await repository.readGitReport(projectPath, weeks)
 
-    expect(reports).toEqual(expectedReports)
-    expect(logger.error).toHaveBeenCalledWith('(1/2) 💥 Error reading git log for irrelevant. More info about the error below:')
-    expect(logger.error).toHaveBeenCalledWith('(2/2) 💥 Error reading git log for irrelevant. More info about the' +
-      ' error below:')
-    expect(logger.error).toHaveBeenCalledWith('Error: Command failed')
+    expect(report).toEqual(failedGitReport)
   })
 
   it('retrieve a list of git projects paths', async () => {
     const projectPath = 'irrelevant'
     const command = new Shell()
     command.run = async () => rawProjectList
-    const repository = new GitReportImplementationRepository(command, logger)
+    const repository = new GitReportImplementationRepository(command)
 
     const projects = await repository.readGitProjects(projectPath)
 
@@ -58,7 +46,7 @@ describe('Git Report Repository should', () => {
     const projectPath = 'irrelevant'
     const command = new Shell()
     command.run = async () => '\nzsh: no matches found: /*/.git'
-    const repository = new GitReportImplementationRepository(command, logger)
+    const repository = new GitReportImplementationRepository(command)
 
     const projects = await repository.readGitProjects(projectPath)
 

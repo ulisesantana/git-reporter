@@ -1,29 +1,34 @@
 import {container} from 'tsyringe'
 import {expectedReport, expectedReportForMultipleRepositories, rawGitLog} from '../../../../fixtures'
 import {Shell} from '../../../../../src/core/infrastructure/shell'
-import {GitReportImplementationRepository} from '../../../../../src/gitReport/infrastructure/git-report.implementation.repository'
-import {GenerateReportUseCase} from '../../../../../src/gitReport/application/cases/generate-report.case'
-import {Logger} from '../../../../../src/core/infrastructure/logger'
+import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
+import {GenerateReportUseCase} from '../../../../../src/git-report/application/cases/generate-report.case'
+import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
 
 describe('Generate a git report based on project paths use case', () => {
+  const noop = () => {}
   let gitReporterRepository: GitReportImplementationRepository
-  let loggerMock: Logger
+  let printerMock: GitReportPrinter
 
   beforeEach(() => {
     container.clearInstances()
     const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
     container.registerInstance(Shell, commandMock)
-    loggerMock = container.resolve(Logger)
-    loggerMock.info = jest.fn()
-    loggerMock.error = jest.fn()
-    container.registerInstance(Logger, loggerMock)
+    printerMock = container.resolve(GitReportPrinter)
+    printerMock.generateProgressBar = () => ({
+      start: noop,
+      update: noop,
+      increment: noop,
+      stop: noop,
+    })
+    container.registerInstance(GitReportPrinter, printerMock)
     gitReporterRepository = container.resolve(GitReportImplementationRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
   it('generates a report from a single repository', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
+    const report = await new GenerateReportUseCase(gitReporterRepository, printerMock)
     .exec({
       projectsPaths: ['path/irrelevant'],
       weeks: 4,
@@ -39,7 +44,7 @@ describe('Generate a git report based on project paths use case', () => {
   })
 
   it('generates a report from multiple repositories', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
+    const report = await new GenerateReportUseCase(gitReporterRepository, printerMock)
     .exec({
       projectsPaths: [
         'path/irrelevant',
@@ -58,7 +63,7 @@ describe('Generate a git report based on project paths use case', () => {
   })
 
   it('generates an empty report if no project paths are given', async () => {
-    const report = await new GenerateReportUseCase(gitReporterRepository)
+    const report = await new GenerateReportUseCase(gitReporterRepository, printerMock)
     .exec({
       projectsPaths: [],
       weeks: 4,

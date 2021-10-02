@@ -1,4 +1,4 @@
-import {GitReportMapper} from '../../../../src/gitReport/infrastructure/git-report.mapper'
+import {GitReportMapper} from '../../../../src/git-report/infrastructure/git-report.mapper'
 import {rawGitLog} from '../../../fixtures'
 
 describe('Git report mapper should', () => {

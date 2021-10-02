@@ -1,5 +1,4 @@
 import {injectable} from 'tsyringe'
-import {red} from 'colorette'
 
 @injectable()
 export class Logger {
@@ -8,6 +7,6 @@ export class Logger {
   }
 
   error(...text: string[]): void {
-    console.error(...text.map(red))
+    console.error(...text)
   }
 }

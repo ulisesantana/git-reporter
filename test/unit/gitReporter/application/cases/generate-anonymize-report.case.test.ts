@@ -1,11 +1,13 @@
 import {container} from 'tsyringe'
 import {expectedReport, rawGitLog} from '../../../../fixtures'
-import {GenerateAnonymizeReportUseCase} from '../../../../../src/gitReport/application/cases/generate-anonymize-report.case'
+import {GenerateAnonymizeReportUseCase} from '../../../../../src/git-report/application/cases/generate-anonymize-report.case'
 import {Shell} from '../../../../../src/core/infrastructure/shell'
-import {GitReportImplementationRepository} from '../../../../../src/gitReport/infrastructure/git-report.implementation.repository'
-import {Logger} from '../../../../../src/core/infrastructure/logger'
+import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
+import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
 
 describe('Generate an anonymize git report based on project paths use case', () => {
+  const noop = () => {}
+  let printerMock: GitReportPrinter
   let gitReporterRepository: GitReportImplementationRepository
 
   beforeEach(() => {
@@ -13,16 +15,20 @@ describe('Generate an anonymize git report based on project paths use case', () 
     const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
     container.registerInstance(Shell, commandMock)
-    const loggerMock = container.resolve(Logger)
-    loggerMock.info = jest.fn()
-    loggerMock.error = jest.fn()
-    container.registerInstance(Logger, loggerMock)
+    printerMock = container.resolve(GitReportPrinter)
+    printerMock.generateProgressBar = () => ({
+      start: noop,
+      update: noop,
+      increment: noop,
+      stop: noop,
+    })
+    container.registerInstance(GitReportPrinter, printerMock)
     gitReporterRepository = container.resolve(GitReportImplementationRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
   it('anonymizes committers personal data', async () => {
-    const report = await new GenerateAnonymizeReportUseCase(gitReporterRepository)
+    const report = await new GenerateAnonymizeReportUseCase(gitReporterRepository, printerMock)
     .exec({
       projectsPaths: ['path/irrelevant'],
       weeks: 4,
