@@ -92,56 +92,72 @@ export const expectedReportForMultipleRepositories: GitReport = {
   })),
 } as GitReport
 
-export const expectedReportOutput = `Report for:
+export const expectedReportCompactOutput = `Report for:
   - irrelevant
 
-Total commits in the last 4 weeks: 13
+Total commits in the last 4 weeks: [36m13[39m
 Contributions by author:
 
-    👥 Rich Trott (rtrott@gmail.com):
-      ✨ Commits: 6
-      📝 Files changed: 16
-      ➕ Insertions: 84
-      ➖ Deletions: 15
+    👥 [35mRich Trott[39m: [36m6[39m commits and [33m16[39m files changed.
+    👥 [35mLuigi Pinca[39m: [36m1[39m commits and [33m2[39m files changed.
+    👥 [35mJames M Snell[39m: [36m1[39m commits and [33m2[39m files changed.
+    👥 [35mArnold Zokas[39m: [36m1[39m commits and [33m1[39m files changed.
+    👥 [35mRod Vagg[39m: [36m1[39m commits and [33m1[39m files changed.
+    👥 [35mAntoine du Hamel[39m: [36m1[39m commits and [33m1[39m files changed.
+    👥 [35mStephen Gallagher[39m: [36m1[39m commits and [33m1[39m files changed.
+    👥 [35mRafael Gonzaga[39m: [36m1[39m commits and [33m1[39m files changed.`
 
-    👥 Luigi Pinca (luigipinca@gmail.com):
-      ✨ Commits: 1
-      📝 Files changed: 2
-      ➕ Insertions: 24
-      ➖ Deletions: 20
+export const expectedReportVerboseOutput = `Report for:
+  - irrelevant
 
-    👥 James M Snell (jasnell@gmail.com):
-      ✨ Commits: 1
-      📝 Files changed: 2
-      ➕ Insertions: 23
-      ➖ Deletions: 1
+Total commits in the last 4 weeks: [36m13[39m
+Contributions by author:
 
-    👥 Arnold Zokas (arnold.zokas@coderoom.net):
-      ✨ Commits: 1
-      📝 Files changed: 1
-      ➕ Insertions: 12
-      ➖ Deletions: 0
+    👥 [35mRich Trott[39m ([90mrtrott@gmail.com[39m):
+      ✨ Commits: [36m6[39m
+      📝 Files changed: [33m16[39m
+      ➕ Insertions: [32m84[39m
+      ➖ Deletions: [31m15[39m
 
-    👥 Rod Vagg (rod@vagg.org):
-      ✨ Commits: 1
-      📝 Files changed: 1
-      ➕ Insertions: 11
-      ➖ Deletions: 0
+    👥 [35mLuigi Pinca[39m ([90mluigipinca@gmail.com[39m):
+      ✨ Commits: [36m1[39m
+      📝 Files changed: [33m2[39m
+      ➕ Insertions: [32m24[39m
+      ➖ Deletions: [31m20[39m
 
-    👥 Antoine du Hamel (duhamelantoine1995@gmail.com):
-      ✨ Commits: 1
-      📝 Files changed: 1
-      ➕ Insertions: 2
-      ➖ Deletions: 2
+    👥 [35mJames M Snell[39m ([90mjasnell@gmail.com[39m):
+      ✨ Commits: [36m1[39m
+      📝 Files changed: [33m2[39m
+      ➕ Insertions: [32m23[39m
+      ➖ Deletions: [31m1[39m
 
-    👥 Stephen Gallagher (sgallagh@redhat.com):
-      ✨ Commits: 1
-      📝 Files changed: 1
-      ➕ Insertions: 1
-      ➖ Deletions: 1
+    👥 [35mArnold Zokas[39m ([90marnold.zokas@coderoom.net[39m):
+      ✨ Commits: [36m1[39m
+      📝 Files changed: [33m1[39m
+      ➕ Insertions: [32m12[39m
+      ➖ Deletions: [31m0[39m
 
-    👥 Rafael Gonzaga (rafael.nunu@hotmail.com):
-      ✨ Commits: 1
-      📝 Files changed: 1
-      ➕ Insertions: 1
-      ➖ Deletions: 0`
+    👥 [35mRod Vagg[39m ([90mrod@vagg.org[39m):
+      ✨ Commits: [36m1[39m
+      📝 Files changed: [33m1[39m
+      ➕ Insertions: [32m11[39m
+      ➖ Deletions: [31m0[39m
+
+    👥 [35mAntoine du Hamel[39m ([90mduhamelantoine1995@gmail.com[39m):
+      ✨ Commits: [36m1[39m
+      📝 Files changed: [33m1[39m
+      ➕ Insertions: [32m2[39m
+      ➖ Deletions: [31m2[39m
+
+    👥 [35mStephen Gallagher[39m ([90msgallagh@redhat.com[39m):
+      ✨ Commits: [36m1[39m
+      📝 Files changed: [33m1[39m
+      ➕ Insertions: [32m1[39m
+      ➖ Deletions: [31m1[39m
+
+    👥 [35mRafael Gonzaga[39m ([90mrafael.nunu@hotmail.com[39m):
+      ✨ Commits: [36m1[39m
+      📝 Files changed: [33m1[39m
+      ➕ Insertions: [32m1[39m
+      ➖ Deletions: [31m0[39m
+`

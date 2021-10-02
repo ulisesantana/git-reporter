@@ -25,6 +25,10 @@ export class GitReportCli extends Command {
       description: 'Slack url for publishing report.',
       default: '',
     }),
+    verbose: flags.boolean({
+      description: 'Set multiline committer contribution info displaying total insertions and deletions. Otherwise the committer contribution info is display in one line with total commits and total files changed.',
+      default: false,
+    }),
     version: flags.version({char: 'v'}),
     weeks: flags.integer({
       char: 'w',
@@ -42,6 +46,7 @@ export class GitReportCli extends Command {
         anonymize,
         directory,
         slackUrl,
+        verbose,
         weeks,
       },
     } = this.parse(GitReportCli)
@@ -52,6 +57,7 @@ export class GitReportCli extends Command {
         directory,
         projects,
         slackUrl,
+        verbose,
         weeks,
       })
     } catch (error) {

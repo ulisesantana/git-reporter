@@ -1,6 +1,6 @@
 import {FailedGitReport, GitReport} from '../../../../src/git-report/domain/git-report'
 import {buildCommitterInfo} from '../../../builders'
-import {expectedReport, expectedReportOutput} from '../../../fixtures'
+import {expectedReport} from '../../../fixtures'
 
 describe('Git Report should', () => {
   it('retrieve total commits between all committers', async () => {
@@ -147,25 +147,31 @@ describe('Git Report should', () => {
     expect(report.committers[3].name).toBe('Robin')
   })
 
-  it('parse report to string', () => {
+  it('transform report to string', () => {
     const report = new GitReport({
       projects: expectedReport.projects,
       committers: expectedReport.committers,
       weeks: expectedReport.weeks,
     })
-    expect(report.toString()).toBe(expectedReportOutput)
+    expect(report.toString()).toMatchSnapshot()
   })
 
-  it('parse report to string not showing committers if there are not given', () => {
+  it('transform report to verbose string', () => {
+    const report = new GitReport({
+      projects: expectedReport.projects,
+      committers: expectedReport.committers,
+      weeks: expectedReport.weeks,
+    })
+    expect(report.toString({verbose: true})).toMatchSnapshot()
+  })
+
+  it('transform report to string not showing committers if there are not given', () => {
     const report = new GitReport({
       projects: expectedReport.projects,
       weeks: expectedReport.weeks,
       committers: [],
     })
-    expect(report.toString()).toBe(`Report for:
-  - irrelevant
-
-Total commits in the last 4 weeks: 0`)
+    expect(report.toString()).toMatchSnapshot()
   })
 
   it('return if has failed during its generation', () => {
