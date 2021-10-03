@@ -2,21 +2,36 @@ import {expectedProjects, expectedReport, rawGitLog, rawProjectList} from '../..
 import {Shell} from '../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {FailedGitReport} from '../../../../src/git-report/domain/git-report'
+import path from 'path'
 
 describe('Git Report Repository should', () => {
-  it('retrieve a list of git reports', async () => {
+  it('retrieve a git report', async () => {
     const projectPath = 'irrelevant'
     const weeks = 4
     const command = new Shell()
     command.run = async () => rawGitLog
     const repository = new GitReportImplementationRepository(command)
 
-    const report = await repository.readGitReport(projectPath, weeks)
+    const report = await repository.readGitReport({projectPath, weeks, updateBeforeRead: false})
 
     expect(report).toEqual(expectedReport)
   })
 
-  it('retrieve a failed git reports if there is not git projects for the given directories', async () => {
+  it('update git repository and retrieve a git report', async () => {
+    const projectPath = 'irrelevant'
+    const absolutePath = path.resolve(projectPath)
+    const weeks = 4
+    const command = new Shell()
+    command.run = jest.fn(async () => rawGitLog)
+    const repository = new GitReportImplementationRepository(command)
+
+    const report = await repository.readGitReport({projectPath, weeks, updateBeforeRead: true})
+
+    expect(report).toEqual(expectedReport)
+    expect(command.run).toHaveBeenCalledWith(`git -C ${absolutePath} fetch && git -C ${absolutePath} pull`)
+  })
+
+  it('retrieve a failed git report if there is not git projects for the given directories', async () => {
     const failedGitReport = new FailedGitReport(expectedReport.projects)
     const projectPath = 'irrelevant'
     const weeks = 4
@@ -26,7 +41,22 @@ describe('Git Report Repository should', () => {
     }
     const repository = new GitReportImplementationRepository(command)
 
-    const report = await repository.readGitReport(projectPath, weeks)
+    const report = await repository.readGitReport({projectPath, weeks, updateBeforeRead: true})
+
+    expect(report).toEqual(failedGitReport)
+  })
+
+  it('retrieve a failed git report if there is not git projects for the given directories', async () => {
+    const failedGitReport = new FailedGitReport(expectedReport.projects)
+    const projectPath = 'irrelevant'
+    const weeks = 4
+    const command = new Shell()
+    command.run = async () => {
+      throw new Error('Command failed')
+    }
+    const repository = new GitReportImplementationRepository(command)
+
+    const report = await repository.readGitReport({projectPath, weeks, updateBeforeRead: false})
 
     expect(report).toEqual(failedGitReport)
   })

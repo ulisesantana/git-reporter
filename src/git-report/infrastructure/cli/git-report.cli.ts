@@ -19,6 +19,11 @@ export class GitReportCli extends Command {
       description: 'Search for all git projects in a directory.',
       default: '',
     }),
+    forceUpdate: flags.boolean({
+      char: 'f',
+      description: 'Update git projects before generating report.',
+      default: false,
+    }),
     help: flags.help({char: 'h'}),
     slackUrl: flags.string({
       char: 's',
@@ -45,6 +50,7 @@ export class GitReportCli extends Command {
       flags: {
         anonymize,
         directory,
+        forceUpdate,
         slackUrl,
         verbose,
         weeks,
@@ -55,6 +61,7 @@ export class GitReportCli extends Command {
       await container.resolve(GitReportController).exec({
         anonymize,
         directory,
+        forceUpdate,
         projects,
         slackUrl,
         verbose,

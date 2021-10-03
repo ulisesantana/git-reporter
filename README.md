@@ -49,6 +49,7 @@ USAGE
 OPTIONS
   -a, --anonymize            Anonymize author names and emails.
   -d, --directory=directory  Search for all git projects in a directory.
+  -f, --forceUpdate          Update git projects before generating report.
   -h, --help                 show CLI help
   -s, --slackUrl=slackUrl    Slack url for publishing report.
   -v, --version              show CLI version
@@ -64,7 +65,7 @@ Using git-reporter with `--verbose` option will display all the report available
 
 ![Usage example with verbose option](docs/verbose-example.png)
 
-## ⚠️ Things to bear in mind
+## ⚠️ Things to bear in mind with --forceUpdate option
 
 1. If any of the directories to analyze has uncommitted changes, the script 
    will fail.

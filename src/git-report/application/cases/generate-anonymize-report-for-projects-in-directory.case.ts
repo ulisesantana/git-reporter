@@ -18,11 +18,13 @@ implements UseCase<GenerateReportForProjectsInDirectoryInput, Promise<GitReport>
   async exec({
     directoryPath,
     weeks,
+    forceUpdate,
   }: GenerateReportForProjectsInDirectoryInput): Promise<GitReport> {
     const projectsPaths = await this.repository.readGitProjects(directoryPath)
     return new GenerateAnonymizeReportUseCase(this.repository, this.printer).exec({
       projectsPaths,
       weeks,
+      forceUpdate,
     })
   }
 }

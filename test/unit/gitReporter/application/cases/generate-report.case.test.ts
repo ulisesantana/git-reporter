@@ -4,7 +4,6 @@ import {Shell} from '../../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {GenerateReportUseCase} from '../../../../../src/git-report/application/cases/generate-report.case'
 import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
-import {noop} from '../../../../noop'
 
 describe('Generate a git report based on project paths use case', () => {
   let gitReporterRepository: GitReportImplementationRepository
@@ -16,16 +15,21 @@ describe('Generate a git report based on project paths use case', () => {
     commandMock.run = async () => rawGitLog
     container.registerInstance(Shell, commandMock)
     printerMock = container.resolve(GitReportPrinter)
-    printerMock.generateProgressBar = () => ({
-      start: noop,
-      value: 0,
-      total: 0,
-      increment: noop,
-      stop: noop,
-    })
     container.registerInstance(GitReportPrinter, printerMock)
     gitReporterRepository = container.resolve(GitReportImplementationRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
+  })
+
+  it('generates a report without updating git repository', async () => {
+    const readGitReportSpy = jest.spyOn(gitReporterRepository, 'readGitReport')
+
+    await new GenerateReportUseCase(gitReporterRepository, printerMock)
+    .exec({
+      projectsPaths: ['path/irrelevant'],
+      weeks: 4,
+    })
+
+    expect(readGitReportSpy).toHaveBeenCalledWith({projectPath: 'path/irrelevant', weeks: 4, updateBeforeRead: false})
   })
 
   it('generates a report from a single repository', async () => {

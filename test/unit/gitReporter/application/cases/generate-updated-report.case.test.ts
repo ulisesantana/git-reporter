@@ -1,12 +1,12 @@
 import {container} from 'tsyringe'
-import {expectedReport, rawGitLog} from '../../../../fixtures'
+import {expectedReport, expectedReportForMultipleRepositories, rawGitLog} from '../../../../fixtures'
 import {Shell} from '../../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
-import {GenerateReportForProjectsInDirectoryUseCase} from '../../../../../src/git-report/application/cases/generate-report-for-projects-in-directory.case'
+import {GenerateUpdatedReportCase} from '../../../../../src/git-report/application/cases/generate-updated-report.case'
 import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
 import {noop} from '../../../../noop'
 
-describe('Generate a git report reading all git projects in a directory use case', () => {
+describe('Generate updated a git report based on project paths use case', () => {
   let gitReporterRepository: GitReportImplementationRepository
   let printerMock: GitReportPrinter
 
@@ -28,14 +28,11 @@ describe('Generate a git report reading all git projects in a directory use case
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })
 
-  it('generates a report successfully', async () => {
-    const readGitReportSpy = jest.spyOn(gitReporterRepository, 'readGitReport')
-
-    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository, printerMock)
+  it('generates a report from a single repository', async () => {
+    const report = await new GenerateUpdatedReportCase(gitReporterRepository, printerMock)
     .exec({
-      directoryPath: 'path/irrelevant',
+      projectsPaths: ['path/irrelevant'],
       weeks: 4,
-      forceUpdate: false,
     })
 
     expect(report.committers).toStrictEqual(expectedReport.committers)
@@ -45,17 +42,25 @@ describe('Generate a git report reading all git projects in a directory use case
     expect(report.totalFilesChanged).toStrictEqual(expectedReport.totalFilesChanged)
     expect(report.totalInsertions).toStrictEqual(expectedReport.totalInsertions)
     expect(report.totalDeletions).toStrictEqual(expectedReport.totalDeletions)
-    expect(readGitReportSpy).toHaveBeenCalledWith({projectPath: 'irrelevant', weeks: 4, updateBeforeRead: false})
   })
 
-  it('generates an updated report successfully', async () => {
+  it('generates a report updating git repository', async () => {
     const readGitReportSpy = jest.spyOn(gitReporterRepository, 'readGitReport')
 
-    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository, printerMock)
+    await new GenerateUpdatedReportCase(gitReporterRepository, printerMock)
     .exec({
-      directoryPath: 'path/irrelevant',
+      projectsPaths: ['path/irrelevant'],
       weeks: 4,
-      forceUpdate: true,
+    })
+
+    expect(readGitReportSpy).toHaveBeenCalledWith({projectPath: 'path/irrelevant', weeks: 4, updateBeforeRead: true})
+  })
+
+  it('generates a report from a single repository', async () => {
+    const report = await new GenerateUpdatedReportCase(gitReporterRepository, printerMock)
+    .exec({
+      projectsPaths: ['path/irrelevant'],
+      weeks: 4,
     })
 
     expect(report.committers).toStrictEqual(expectedReport.committers)
@@ -65,25 +70,35 @@ describe('Generate a git report reading all git projects in a directory use case
     expect(report.totalFilesChanged).toStrictEqual(expectedReport.totalFilesChanged)
     expect(report.totalInsertions).toStrictEqual(expectedReport.totalInsertions)
     expect(report.totalDeletions).toStrictEqual(expectedReport.totalDeletions)
-    expect(readGitReportSpy).toHaveBeenCalledWith({projectPath: 'irrelevant', weeks: 4, updateBeforeRead: true})
+  })
+
+  it('generates a report from multiple repositories', async () => {
+    const report = await new GenerateUpdatedReportCase(gitReporterRepository, printerMock)
+    .exec({
+      projectsPaths: [
+        'path/irrelevant',
+        'path/irrelevant',
+      ],
+      weeks: 4,
+    })
+
+    expect(report.committers).toStrictEqual(expectedReportForMultipleRepositories.committers)
+    expect(report.projects).toStrictEqual(expectedReportForMultipleRepositories.projects)
+    expect(report.weeks).toStrictEqual(expectedReportForMultipleRepositories.weeks)
+    expect(report.totalCommits).toStrictEqual(expectedReportForMultipleRepositories.totalCommits)
+    expect(report.totalFilesChanged).toStrictEqual(expectedReportForMultipleRepositories.totalFilesChanged)
+    expect(report.totalInsertions).toStrictEqual(expectedReportForMultipleRepositories.totalInsertions)
+    expect(report.totalDeletions).toStrictEqual(expectedReportForMultipleRepositories.totalDeletions)
   })
 
   it('generates an empty report if no project paths are given', async () => {
-    gitReporterRepository.readGitProjects = jest.fn(async () => [])
-
-    const report = await new GenerateReportForProjectsInDirectoryUseCase(gitReporterRepository, printerMock)
+    const report = await new GenerateUpdatedReportCase(gitReporterRepository, printerMock)
     .exec({
-      directoryPath: 'path/irrelevant',
+      projectsPaths: [],
       weeks: 4,
-      forceUpdate: false,
     })
 
-    expect(report.committers).toStrictEqual([])
-    expect(report.projects).toStrictEqual([])
-    expect(report.weeks).toBe(0)
     expect(report.totalCommits).toBe(0)
-    expect(report.totalFilesChanged).toBe(0)
-    expect(report.totalInsertions).toBe(0)
-    expect(report.totalDeletions).toBe(0)
+    expect(report.committers).toStrictEqual([])
   })
 })

@@ -29,10 +29,13 @@ describe('Generate an anonymize git report reading all git projects in a directo
   })
 
   it('anonymizes committers personal data', async () => {
+    const readGitReportSpy = jest.spyOn(gitReporterRepository, 'readGitReport')
+
     const report = await new GenerateAnonymizeReportForProjectsInDirectoryUseCase(gitReporterRepository, printerMock)
     .exec({
       directoryPath: 'path/irrelevant',
       weeks: 4,
+      forceUpdate: false,
     })
 
     expect(report.totalCommits).toBe(expectedReport.totalCommits)
@@ -43,5 +46,27 @@ describe('Generate an anonymize git report reading all git projects in a directo
       expect(anonymizedCommitter.email).not.toBe(expectedReport.committers[index].email)
       expect(anonymizedCommitter.name).not.toBe(expectedReport.committers[index].name)
     }
+    expect(readGitReportSpy).toHaveBeenCalledWith({projectPath: 'irrelevant', weeks: 4, updateBeforeRead: false})
+  })
+
+  it('anonymizes committers personal data for updated report', async () => {
+    const readGitReportSpy = jest.spyOn(gitReporterRepository, 'readGitReport')
+
+    const report = await new GenerateAnonymizeReportForProjectsInDirectoryUseCase(gitReporterRepository, printerMock)
+    .exec({
+      directoryPath: 'path/irrelevant',
+      weeks: 4,
+      forceUpdate: true,
+    })
+
+    expect(report.totalCommits).toBe(expectedReport.totalCommits)
+    expect(report.projects).toStrictEqual(expectedReport.projects)
+    expect(report.weeks).toBe(expectedReport.weeks)
+    for (const [index, anonymizedCommitter] of report.committers.entries()) {
+      expect(anonymizedCommitter.totalCommits).toBe(expectedReport.committers[index].totalCommits)
+      expect(anonymizedCommitter.email).not.toBe(expectedReport.committers[index].email)
+      expect(anonymizedCommitter.name).not.toBe(expectedReport.committers[index].name)
+    }
+    expect(readGitReportSpy).toHaveBeenCalledWith({projectPath: 'irrelevant', weeks: 4, updateBeforeRead: true})
   })
 })
