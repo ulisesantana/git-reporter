@@ -107,7 +107,7 @@ Contributions by author:
     👥 [35mStephen Gallagher[39m: [36m1[39m commits and [33m1[39m files changed.
     👥 [35mRafael Gonzaga[39m: [36m1[39m commits and [33m1[39m files changed.
 
-⚠️  Report generated without updating git projects. For generating a report updating projects use --forceUpdate (-f) option.`
+⚠️  The report could be outdated due to has been generated without updating git projects. Use --forceUpdate (-f) option for updating projects before generating the report.`
 
 export const expectedUpdatedReportCompactOutput = `Report for:
   - irrelevant
@@ -179,4 +179,4 @@ Contributions by author:
       ➖ Deletions: [31m0[39m
 
 
-⚠️  Report generated without updating git projects. For generating a report updating projects use --forceUpdate (-f) option.`
+⚠️  The report could be outdated due to has been generated without updating git projects. Use --forceUpdate (-f) option for updating projects before generating the report.`

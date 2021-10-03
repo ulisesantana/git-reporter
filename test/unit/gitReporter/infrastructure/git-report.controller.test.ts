@@ -168,7 +168,7 @@ describe('Git Reporter Controller should', () => {
 
     expect(printerMock.info).toHaveBeenCalledWith(`[33m⚠️  There are no git projects to report.[39m
 
-⚠️  Report generated without updating git projects. For generating a report updating projects use --forceUpdate (-f) option.`)
+⚠️  The report could be outdated due to has been generated without updating git projects. Use --forceUpdate (-f) option for updating projects before generating the report.`)
   })
 
   it('notify report on slack', async () => {

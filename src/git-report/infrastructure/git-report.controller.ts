@@ -94,6 +94,6 @@ export class GitReportController {
   }
 
   private static concatReportWithoutUpdateWarning(report: string) {
-    return report.concat(`${EOL}${EOL}⚠️  Report generated without updating git projects. For generating a report updating projects use --forceUpdate (-f) option.`)
+    return report.concat(`${EOL}${EOL}⚠️  The report could be outdated due to has been generated without updating git projects. Use --forceUpdate (-f) option for updating projects before generating the report.`)
   }
 }
