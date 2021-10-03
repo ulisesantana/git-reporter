@@ -1,5 +1,10 @@
 import {container} from 'tsyringe'
-import {expectedReportCompactOutput, expectedReportVerboseOutput, rawGitLog} from '../../../fixtures'
+import {
+  expectedReportCompactOutput,
+  expectedReportVerboseOutput,
+  expectedUpdatedReportCompactOutput,
+  rawGitLog,
+} from '../../../fixtures'
 import {Shell} from '../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {GitReportController} from '../../../../src/git-report/infrastructure/git-report.controller'
@@ -67,7 +72,7 @@ describe('Git Reporter Controller should', () => {
       slackUrl: 'irrelevant',
     })
 
-    expect(printerMock.info).toHaveBeenCalledWith(expectedReportCompactOutput)
+    expect(printerMock.info).toHaveBeenCalledWith(expectedUpdatedReportCompactOutput)
     expect(readGitReportSpy).toHaveBeenCalledWith({projectPath: path.resolve('irrelevant'), weeks: 4, updateBeforeRead: true})
   })
 
@@ -161,7 +166,9 @@ describe('Git Reporter Controller should', () => {
       slackUrl: 'irrelevant',
     })
 
-    expect(printerMock.info).toHaveBeenCalledWith('[33m⚠️  There are no git projects to report.[39m')
+    expect(printerMock.info).toHaveBeenCalledWith(`[33m⚠️  There are no git projects to report.[39m
+
+⚠️  Report generated without updating git projects. For generating a report updating projects use --forceUpdate (-f) option.`)
   })
 
   it('notify report on slack', async () => {

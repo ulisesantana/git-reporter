@@ -105,6 +105,23 @@ Contributions by author:
     👥 [35mRod Vagg[39m: [36m1[39m commits and [33m1[39m files changed.
     👥 [35mAntoine du Hamel[39m: [36m1[39m commits and [33m1[39m files changed.
     👥 [35mStephen Gallagher[39m: [36m1[39m commits and [33m1[39m files changed.
+    👥 [35mRafael Gonzaga[39m: [36m1[39m commits and [33m1[39m files changed.
+
+⚠️  Report generated without updating git projects. For generating a report updating projects use --forceUpdate (-f) option.`
+
+export const expectedUpdatedReportCompactOutput = `Report for:
+  - irrelevant
+
+Total commits in the last 4 weeks: [36m13[39m
+Contributions by author:
+
+    👥 [35mRich Trott[39m: [36m6[39m commits and [33m16[39m files changed.
+    👥 [35mLuigi Pinca[39m: [36m1[39m commits and [33m2[39m files changed.
+    👥 [35mJames M Snell[39m: [36m1[39m commits and [33m2[39m files changed.
+    👥 [35mArnold Zokas[39m: [36m1[39m commits and [33m1[39m files changed.
+    👥 [35mRod Vagg[39m: [36m1[39m commits and [33m1[39m files changed.
+    👥 [35mAntoine du Hamel[39m: [36m1[39m commits and [33m1[39m files changed.
+    👥 [35mStephen Gallagher[39m: [36m1[39m commits and [33m1[39m files changed.
     👥 [35mRafael Gonzaga[39m: [36m1[39m commits and [33m1[39m files changed.`
 
 export const expectedReportVerboseOutput = `Report for:
@@ -160,4 +177,6 @@ Contributions by author:
       📝 Files changed: [33m1[39m
       ➕ Insertions: [32m1[39m
       ➖ Deletions: [31m0[39m
-`
+
+
+⚠️  Report generated without updating git projects. For generating a report updating projects use --forceUpdate (-f) option.`
