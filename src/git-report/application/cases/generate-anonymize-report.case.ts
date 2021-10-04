@@ -4,8 +4,9 @@ import {GenerateReportInput, GenerateReportUseCase} from './generate-report.case
 import {GitReport} from '../../domain/git-report'
 import {GitReportRepository} from '../git-report.repository'
 import {GitReportImplementationRepository} from '../../infrastructure/git-report.implementation.repository'
-import {GitReportPrinter} from '../../infrastructure/cli/git-report.printer'
 import {GenerateUpdatedReportCase} from './generate-updated-report.case'
+import {GitReportPrinter} from '../git-report.printer'
+import {GitReportCliPrinter} from '../../infrastructure/cli/git-report.cli.printer'
 
 export interface GenerateUpdatedReportInput extends GenerateReportInput {
   /**
@@ -18,7 +19,7 @@ export interface GenerateUpdatedReportInput extends GenerateReportInput {
 export class GenerateAnonymizeReportUseCase implements UseCase<GenerateReportInput, Promise<GitReport>> {
   constructor(
     @inject(GitReportImplementationRepository) private repository: GitReportRepository,
-    @inject(GitReportPrinter) private readonly printer: GitReportPrinter,
+    @inject(GitReportCliPrinter) private readonly printer: GitReportPrinter,
   ) {}
 
   async exec({forceUpdate, ...input}: GenerateUpdatedReportInput): Promise<GitReport> {

@@ -4,8 +4,9 @@ import {UseCase} from '../../../core/domain/use-case'
 import {GenerateReportUseCase} from './generate-report.case'
 import {GitReport} from '../../domain/git-report'
 import {GitReportImplementationRepository} from '../../infrastructure/git-report.implementation.repository'
-import {GitReportPrinter} from '../../infrastructure/cli/git-report.printer'
 import {GenerateUpdatedReportCase} from './generate-updated-report.case'
+import {GitReportCliPrinter} from '../../infrastructure/cli/git-report.cli.printer'
+import {GitReportPrinter} from '../git-report.printer'
 
 export interface GenerateReportForProjectsInDirectoryInput {
   /**
@@ -27,7 +28,7 @@ export class GenerateReportForProjectsInDirectoryUseCase
 implements UseCase<GenerateReportForProjectsInDirectoryInput, Promise<GitReport>> {
   constructor(
     @inject(GitReportImplementationRepository) private repository: GitReportRepository,
-    @inject(GitReportPrinter) private readonly printer: GitReportPrinter,
+    @inject(GitReportCliPrinter) private readonly printer: GitReportPrinter,
   ) {}
 
   async exec({directoryPath, weeks, forceUpdate}: GenerateReportForProjectsInDirectoryInput): Promise<GitReport> {

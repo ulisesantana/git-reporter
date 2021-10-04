@@ -1,7 +1,7 @@
 import {Command, flags} from '@oclif/command'
 import {container} from 'tsyringe'
 import {GitReportController} from '../git-report.controller'
-import {GitReportPrinter} from './git-report.printer'
+import {GitReportCliPrinter} from './git-report.cli.printer'
 
 export class GitReportCli extends Command {
   static strict = false
@@ -43,7 +43,7 @@ export class GitReportCli extends Command {
   }
 
   async run(): Promise<void> {
-    const printer = container.resolve(GitReportPrinter)
+    const printer = container.resolve(GitReportCliPrinter)
     printer.printInit()
     const {
       argv: projects,

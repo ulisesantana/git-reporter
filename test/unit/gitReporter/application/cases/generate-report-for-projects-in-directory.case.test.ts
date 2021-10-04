@@ -3,8 +3,9 @@ import {expectedReport, rawGitLog} from '../../../../fixtures'
 import {Shell} from '../../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {GenerateReportForProjectsInDirectoryUseCase} from '../../../../../src/git-report/application/cases/generate-report-for-projects-in-directory.case'
-import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
 import {noop} from '../../../../noop'
+import {GitReportCliPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.cli.printer'
+import {GitReportPrinter} from '../../../../../src/git-report/application/git-report.printer'
 
 describe('Generate a git report reading all git projects in a directory use case', () => {
   let gitReporterRepository: GitReportImplementationRepository
@@ -15,7 +16,7 @@ describe('Generate a git report reading all git projects in a directory use case
     const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
     container.registerInstance(Shell, commandMock)
-    printerMock = container.resolve(GitReportPrinter)
+    printerMock = container.resolve(GitReportCliPrinter)
     printerMock.generateProgressBar = () => ({
       start: noop,
       value: 0,
@@ -23,7 +24,7 @@ describe('Generate a git report reading all git projects in a directory use case
       increment: noop,
       stop: noop,
     })
-    container.registerInstance(GitReportPrinter, printerMock)
+    container.registerInstance(GitReportCliPrinter, printerMock)
     gitReporterRepository = container.resolve(GitReportImplementationRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })

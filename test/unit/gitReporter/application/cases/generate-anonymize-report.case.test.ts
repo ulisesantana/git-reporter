@@ -3,8 +3,9 @@ import {expectedReport, rawGitLog} from '../../../../fixtures'
 import {GenerateAnonymizeReportUseCase} from '../../../../../src/git-report/application/cases/generate-anonymize-report.case'
 import {Shell} from '../../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
-import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
 import {noop} from '../../../../noop'
+import {GitReportCliPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.cli.printer'
+import {GitReportPrinter} from '../../../../../src/git-report/application/git-report.printer'
 
 describe('Generate an anonymize git report based on project paths use case', () => {
   let printerMock: GitReportPrinter
@@ -15,7 +16,7 @@ describe('Generate an anonymize git report based on project paths use case', () 
     const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
     container.registerInstance(Shell, commandMock)
-    printerMock = container.resolve(GitReportPrinter)
+    printerMock = container.resolve(GitReportCliPrinter)
     printerMock.generateProgressBar = () => ({
       start: noop,
       value: 0,
@@ -23,7 +24,7 @@ describe('Generate an anonymize git report based on project paths use case', () 
       increment: noop,
       stop: noop,
     })
-    container.registerInstance(GitReportPrinter, printerMock)
+    container.registerInstance(GitReportCliPrinter, printerMock)
     gitReporterRepository = container.resolve(GitReportImplementationRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })

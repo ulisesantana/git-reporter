@@ -4,15 +4,16 @@ import {UseCase} from '../../../core/domain/use-case'
 import {GitReport} from '../../domain/git-report'
 import {GitReportImplementationRepository} from '../../infrastructure/git-report.implementation.repository'
 import {GitReportList} from '../../domain/git-report-list'
-import {GitReportPrinter, ProgressBar} from '../../infrastructure/cli/git-report.printer'
+import {GitReportPrinter, ProgressBar} from '../git-report.printer'
 import {EOL} from 'os'
 import {GenerateReportInput} from './generate-report.case'
+import {GitReportCliPrinter} from '../../infrastructure/cli/git-report.cli.printer'
 
 @injectable()
 export class GenerateUpdatedReportCase implements UseCase<GenerateReportInput, Promise<GitReport>> {
   constructor(
     @inject(GitReportImplementationRepository) private repository: GitReportRepository,
-    @inject(GitReportPrinter) private readonly printer: GitReportPrinter,
+    @inject(GitReportCliPrinter) private readonly printer: GitReportPrinter,
   ) {}
 
   async exec({projectsPaths, weeks}: GenerateReportInput): Promise<GitReport> {

@@ -1,4 +1,4 @@
-import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
+import {GitReportCliPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.cli.printer'
 import {container} from 'tsyringe'
 import {Logger} from '../../../../../src/core/infrastructure/logger'
 import {red, underline} from 'colorette'
@@ -7,7 +7,7 @@ import {EOL} from 'os'
 import {FailedGitReport} from '../../../../../src/git-report/domain/git-report'
 import path from 'path'
 
-describe('GitReportPrinter should', () => {
+describe('GitReportCliPrinter should', () => {
   const logger = container.resolve(Logger)
 
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('GitReportPrinter should', () => {
   it('log info level', () => {
     const message = 'irrelevant'
 
-    new GitReportPrinter(logger).info(message)
+    new GitReportCliPrinter(logger).info(message)
 
     expect(logger.info).toHaveBeenCalledWith(message)
     expect(logger.error).not.toBeCalled()
@@ -27,14 +27,14 @@ describe('GitReportPrinter should', () => {
   it('log error level', () => {
     const message = 'irrelevant'
 
-    new GitReportPrinter(logger).error(message)
+    new GitReportCliPrinter(logger).error(message)
 
     expect(logger.error).toHaveBeenCalledWith(message)
     expect(logger.info).not.toBeCalled()
   })
 
   it('return a printable progress bar', () => {
-    const printer = new GitReportPrinter(logger)
+    const printer = new GitReportCliPrinter(logger)
     const progress = printer.generateProgressBar('test')
 
     progress.start(2, 1)
@@ -50,14 +50,14 @@ describe('GitReportPrinter should', () => {
   })
 
   it('print script initialization', () => {
-    new GitReportPrinter(logger).printInit()
+    new GitReportCliPrinter(logger).printInit()
 
     expect(logger.info).toHaveBeenCalledWith(underline(`Initializing git reporter ${version}${EOL}`))
   })
 
   it('print start fetching for projects in directory message', () => {
     const pathToDirectory = '.'
-    new GitReportPrinter(logger).printStartFetchingDirectory(pathToDirectory)
+    new GitReportCliPrinter(logger).printStartFetchingDirectory(pathToDirectory)
 
     expect(logger.info).toHaveBeenCalledWith(`🔍 Starting to fetch git logs for projects in directory ${
       path.resolve(pathToDirectory)
@@ -66,14 +66,14 @@ describe('GitReportPrinter should', () => {
 
   it('print start fetching for projects', () => {
     const paths = ['src', 'test']
-    new GitReportPrinter(logger).printStartFetchingProjects(paths)
+    new GitReportCliPrinter(logger).printStartFetchingProjects(paths)
 
     expect(logger.info).toHaveBeenCalledWith(`🔍 Starting to fetch git logs for: ${
       EOL}  - src${EOL}  - test${EOL}`)
   })
 
   it('print failed reports', () => {
-    new GitReportPrinter(logger).printFailedReports([
+    new GitReportCliPrinter(logger).printFailedReports([
       new FailedGitReport(['irrelevant', 'irrelevant2']),
       new FailedGitReport(['irrelevant3']),
     ])

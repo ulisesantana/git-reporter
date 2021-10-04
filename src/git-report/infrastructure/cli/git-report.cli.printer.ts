@@ -6,17 +6,10 @@ import path from 'path'
 import {EOL} from 'os'
 import {GitReport} from '../../domain/git-report'
 import version from '../../../version'
-
-export interface ProgressBar {
-  start(total: number, initial: number): void
-  increment(value?: number): void
-  stop(): void
-  value: number
-  total: number
-}
+import {ProgressBar} from '../../application/git-report.printer'
 
 @singleton()
-export class GitReportPrinter {
+export class GitReportCliPrinter {
   constructor(@inject(Logger) private logger: Logger) {}
 
   info(...text: string[]): void {
@@ -49,7 +42,7 @@ export class GitReportPrinter {
   printStartFetchingProjects(projectsPath: string[]): void {
     const projectsAbsolutePaths = projectsPath.map(project => path.resolve(project))
     this.logger.info(`🔍 Starting to fetch git logs for: ${EOL}  - ${
-      projectsAbsolutePaths.map(GitReportPrinter.extractProjectName).join(`${EOL}  - `)
+      projectsAbsolutePaths.map(GitReportCliPrinter.extractProjectName).join(`${EOL}  - `)
     }${EOL}`)
   }
 

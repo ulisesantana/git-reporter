@@ -9,11 +9,12 @@ import {Shell} from '../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {GitReportController} from '../../../../src/git-report/infrastructure/git-report.controller'
 import {Notifier} from '../../../../src/core/infrastructure/notifier'
-import {GitReportPrinter} from '../../../../src/git-report/infrastructure/cli/git-report.printer'
 import {noop} from '../../../noop'
 import path from 'path'
+import {GitReportCliPrinter} from '../../../../src/git-report/infrastructure/cli/git-report.cli.printer'
+import {GitReportPrinter} from '../../../../src/git-report/application/git-report.printer'
 
-jest.mock('../../../../src/git-report/infrastructure/cli/git-report.printer')
+jest.mock('../../../../src/git-report/infrastructure/cli/git-report.cli.printer')
 jest.mock('../../../../src/core/infrastructure/notifier')
 
 describe('Git Reporter Controller should', () => {
@@ -32,7 +33,7 @@ describe('Git Reporter Controller should', () => {
     container.registerInstance(GitReportImplementationRepository, gitReporterRepository)
 
     notifierMock = container.resolve(Notifier)
-    printerMock = container.resolve(GitReportPrinter)
+    printerMock = container.resolve(GitReportCliPrinter)
     printerMock.generateProgressBar = () => ({
       start: noop,
       value: 0,
@@ -40,7 +41,7 @@ describe('Git Reporter Controller should', () => {
       increment: noop,
       stop: noop,
     })
-    container.registerInstance(GitReportPrinter, printerMock)
+    container.registerInstance(GitReportCliPrinter, printerMock)
   })
 
   it('print compact report', async () => {

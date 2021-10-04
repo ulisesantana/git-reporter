@@ -3,7 +3,8 @@ import {expectedReport, expectedReportForMultipleRepositories, rawGitLog} from '
 import {Shell} from '../../../../../src/core/infrastructure/shell'
 import {GitReportImplementationRepository} from '../../../../../src/git-report/infrastructure/git-report.implementation.repository'
 import {GenerateReportUseCase} from '../../../../../src/git-report/application/cases/generate-report.case'
-import {GitReportPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.printer'
+import {GitReportCliPrinter} from '../../../../../src/git-report/infrastructure/cli/git-report.cli.printer'
+import {GitReportPrinter} from '../../../../../src/git-report/application/git-report.printer'
 
 describe('Generate a git report based on project paths use case', () => {
   let gitReporterRepository: GitReportImplementationRepository
@@ -14,8 +15,8 @@ describe('Generate a git report based on project paths use case', () => {
     const commandMock = container.resolve(Shell)
     commandMock.run = async () => rawGitLog
     container.registerInstance(Shell, commandMock)
-    printerMock = container.resolve(GitReportPrinter)
-    container.registerInstance(GitReportPrinter, printerMock)
+    printerMock = container.resolve(GitReportCliPrinter)
+    container.registerInstance(GitReportCliPrinter, printerMock)
     gitReporterRepository = container.resolve(GitReportImplementationRepository)
     gitReporterRepository.readGitProjects = jest.fn(async () => ['irrelevant'])
   })

@@ -4,8 +4,9 @@ import {UseCase} from '../../../core/domain/use-case'
 import {GitReport} from '../../domain/git-report'
 import {GitReportImplementationRepository} from '../../infrastructure/git-report.implementation.repository'
 import {GitReportList} from '../../domain/git-report-list'
-import {GitReportPrinter} from '../../infrastructure/cli/git-report.printer'
 import {EOL} from 'os'
+import {GitReportCliPrinter} from '../../infrastructure/cli/git-report.cli.printer'
+import {GitReportPrinter} from '../git-report.printer'
 
 export interface GenerateReportInput {
   /**
@@ -22,7 +23,7 @@ export interface GenerateReportInput {
 export class GenerateReportUseCase implements UseCase<GenerateReportInput, Promise<GitReport>> {
   constructor(
     @inject(GitReportImplementationRepository) private repository: GitReportRepository,
-    @inject(GitReportPrinter) private readonly printer: GitReportPrinter,
+    @inject(GitReportCliPrinter) private readonly printer: GitReportPrinter,
   ) {}
 
   async exec({projectsPaths, weeks}: GenerateReportInput): Promise<GitReport> {

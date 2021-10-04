@@ -5,9 +5,10 @@ import {GenerateAnonymizeReportUseCase} from '../application/cases/generate-anon
 import {GenerateReportUseCase} from '../application/cases/generate-report.case'
 import {GenerateReportForProjectsInDirectoryUseCase} from '../application/cases/generate-report-for-projects-in-directory.case'
 import {Notifier} from '../../core/infrastructure/notifier'
-import {GitReportPrinter} from './cli/git-report.printer'
 import {GenerateUpdatedReportCase} from '../application/cases/generate-updated-report.case'
 import {EOL} from 'os'
+import {GitReportPrinter} from '../application/git-report.printer'
+import {GitReportCliPrinter} from './cli/git-report.cli.printer'
 
 interface GitReporterOptions {
   anonymize: boolean
@@ -23,7 +24,7 @@ interface GitReporterOptions {
 export class GitReportController {
   constructor(
     @inject(Notifier) private readonly notifier: Notifier,
-    @inject(GitReportPrinter) private readonly printer: GitReportPrinter,
+    @inject(GitReportCliPrinter) private readonly printer: GitReportPrinter,
   ) {}
 
   async exec(options: GitReporterOptions): Promise<void> {
